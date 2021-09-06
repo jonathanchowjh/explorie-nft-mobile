@@ -16,11 +16,10 @@ import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import FirstStep from '../screens/Welcome/Step1'
 import SecondStep from '../screens/Welcome/Step2'
-import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
-import MapsScreen from '../screens/MapsScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import ThirdStepScreen from '../screens/Welcome/Step3';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -43,6 +42,7 @@ function RootNavigator() {
     <Stack.Navigator>
       <Stack.Screen name="Root" component={FirstStep} options={{ headerShown: false }} />
       <Stack.Screen name="Step2" component={SecondStep} options={{ headerShown: false }} />
+      <Stack.Screen name="Step3" component={ThirdStepScreen} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
