@@ -17,24 +17,24 @@ export default function FirstStepScreen({ navigation }: RootTabScreenProps<'Step
 }
 
 const styles = StyleSheet.create({
+    button: {
+        backgroundColor: 'white',
+        color: '#FF0000',
+        padding: 15
+    },
     container: {
-        flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
         backgroundColor: '#FF0000',
+        flex: 1,
+        justifyContent: 'center',
     },
     footer: {
-        position: 'absolute',
         bottom: 50,
+        position: 'absolute',
     },
     subtitle: {
+        color: 'white',
         fontSize: 20,
         fontWeight: 'bold',
-        color: 'white',
-    },
-    button: {
-        padding: 15,
-        backgroundColor: 'white',
-        color: '#FF0000'
     }
 });

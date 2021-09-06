@@ -17,25 +17,26 @@ export default function SecondStepScreen({ navigation }: RootTabScreenProps<'Ste
     );
 }
 
+const black = '#000'
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
     bottom: {
-        flex: 1,
         alignItems: 'center',
+        flex: 1,
         justifyContent: 'center'
     },
-    title: {
-        fontSize: 20,
-        color: 'black',
-    },
-    subtitle: {
-        fontSize: 15,
-        color: 'black',
+    container: {
+        flex: 1,
     },
     image: {
         flex: 1,
         justifyContent: "center"
+    },
+    subtitle: {
+        color: black,
+        fontSize: 15,
+    },
+    title: {
+        color: black,
+        fontSize: 20,
     }
 });
