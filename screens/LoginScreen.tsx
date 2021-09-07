@@ -1,39 +1,40 @@
 import * as React from "react";
-import { StyleSheet } from "react-native";
-
-import EditScreenInfo from "../components/EditScreenInfo";
-import { Text, View } from "../components/Themed";
+import { SafeAreaView, StyleSheet, TextInput, Button } from "react-native";
 import { RootTabScreenProps } from "../types";
 
-export default function TabOneScreen({
+export default function LoginScreen({
   navigation,
-}: RootTabScreenProps<"TabOne">) {
+}: RootTabScreenProps<"Login">) {
+  const [text, onChangeText] = React.useState("Username");
+  const [number, onChangeNumber] = React.useState("123");
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
+    <SafeAreaView>
+      <TextInput
+        style={styles.input}
+        onChangeText={onChangeText}
+        value={text}
+        placeholder="Username"
       />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
-    </View>
+      <TextInput
+        style={styles.input}
+        onChangeText={onChangeNumber}
+        value={number}
+        placeholder="Password"
+      />
+      <Button
+        title="Next"
+        onPress={() => navigation.navigate("ExploryMap")}
+      ></Button>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    flex: 1,
-    justifyContent: "center",
-  },
-  separator: {
-    height: 1,
-    marginVertical: 30,
-    width: "80%",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
+  input: {
+    borderWidth: 1,
+    height: 40,
+    margin: 12,
+    padding: 10,
   },
 });

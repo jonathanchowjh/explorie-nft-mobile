@@ -21,6 +21,7 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 import FirstStep from "../screens/Welcome/Step1";
 import SecondStep from "../screens/Welcome/Step2";
 import ThirdStepScreen from "../screens/Welcome/Step3";
+import LoginScreen from "../screens/LoginScreen";
 import MapsScreen from "../screens/MapsScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import {
@@ -56,7 +57,7 @@ function RootNavigator() {
     <Stack.Navigator>
       <Stack.Screen
         name="Root"
-        component={MapsScreen}
+        component={FirstStep}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -69,6 +70,12 @@ function RootNavigator() {
         component={ThirdStepScreen}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="ExploryMap" component={MapsScreen} />
       <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}
