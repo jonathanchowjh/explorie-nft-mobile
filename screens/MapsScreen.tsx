@@ -39,6 +39,25 @@ export default function MapsScreen({ navigation }) {
           anchor={{ x: 0.69, y: 1 }}
           image={flagPinkImg}
         ></Marker>
+        <Marker
+          coordinate={{
+            latitude: LATITUDE - SPACE,
+            longitude: LONGITUDE - SPACE,
+          }}
+          centerOffset={{ x: -42, y: -60 }}
+          anchor={{ x: 0.84, y: 1 }}
+          image={flagPinkImg}
+        />
+        <Marker
+          coordinate={{
+            latitude: LATITUDE + SPACE,
+            longitude: LONGITUDE - SPACE,
+          }}
+          centerOffset={{ x: -42, y: -60 }}
+          anchor={{ x: 0.84, y: 1 }}
+          opacity={0.6}
+          image={flagPinkImg}
+        />
       </MapView>
     </View>
   );
