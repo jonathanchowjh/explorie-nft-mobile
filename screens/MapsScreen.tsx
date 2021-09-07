@@ -12,7 +12,7 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
 
-export default function MapsScreen() {
+export default function MapsScreen({ navigation }) {
   const [marker1, setMarker1] = useState(true)
   const [marker2, setMarker2] = useState(false)
 
@@ -29,7 +29,8 @@ export default function MapsScreen() {
                 longitudeDelta: LONGITUDE_DELTA,
             }}
             >
-            <Marker
+              <Marker
+                onPress={() => navigation.navigate('Modal')}
                 coordinate={{
                 latitude: LATITUDE + SPACE,
                 longitude: LONGITUDE + SPACE,
@@ -38,7 +39,6 @@ export default function MapsScreen() {
                 anchor={{ x: 0.69, y: 1 }}
                 image={flagPinkImg}
             >
-                <Text style={styles.marker}>X</Text>
             </Marker>
             <Marker
                 coordinate={{
