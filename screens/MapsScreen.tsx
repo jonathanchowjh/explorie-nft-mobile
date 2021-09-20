@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import MapView, { Marker } from "react-native-maps";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { StyleSheet, View, Dimensions } from "react-native";
 import flagPinkImg from "../assets/images/flag-pink.png";
 
 const { width, height } = Dimensions.get("window");
