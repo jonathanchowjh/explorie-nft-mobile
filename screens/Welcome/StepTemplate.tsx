@@ -36,11 +36,9 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     subtitle: {
-        color: black,
         fontSize: 15,
     },
     title: {
-        color: black,
         fontSize: 20,
     }
 });

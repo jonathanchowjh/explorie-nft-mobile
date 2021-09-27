@@ -1,8 +1,9 @@
-const pink = "#F06DF2";
-const purple = "#6805F2";
-const darkBlue = "#010326";
-const yellow = "#F2CB57";
-const red = "#F23838";
+export const pink = "#F06DF2";
+export const purple = "#6805F2";
+export const darkBlue = "#010326";
+export const yellow = "#F2CB57";
+export const red = "#F23838";
+export const white = "#FFFFFF"
 
 /**
  * TODO implement color scheme above
