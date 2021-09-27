@@ -73,7 +73,11 @@ function RootNavigator() {
         component={LoginScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="ExploryMap" component={MapsScreen} />
+      <Stack.Screen
+        name="ExploryMap"
+        component={MapsScreen}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}
