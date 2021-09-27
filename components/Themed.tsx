@@ -8,7 +8,8 @@ import { Text as DefaultText,
   View as DefaultView,
   TextInput as DefaultTextInput,
   Pressable as DefaultPressable,
-  ScrollView as DefaultScrollView
+  ScrollView as DefaultScrollView,
+  TouchableOpacity as DefaultTouchableOpacity
 } from 'react-native';
 
 import Colors from '../constants/Colors';
@@ -70,3 +71,8 @@ export function TextInput(props: ViewProps) {
 
   return <DefaultTextInput style={[{ backgroundColor }, style]} {...otherProps} />;
 }
+export const Button = ({ onPress, title, styles }: { onPress: () => void; title: string }) => (
+  <DefaultTouchableOpacity onPress={onPress} style={styles.buttonBackground}>
+    <Text style={styles.buttonText}>{title}</Text>
+  </DefaultTouchableOpacity>
+);
