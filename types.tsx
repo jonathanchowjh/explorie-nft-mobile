@@ -30,6 +30,9 @@ export type RootTabParamList = {
   Step1: undefined;
   Step2: undefined;
   Step3: undefined;
+  Home: undefined;
+  Login: undefined;
+  ExploryMap: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<
