@@ -61,12 +61,12 @@ export default function HomeScreen({
             <View style={{ flex: 1, backgroundColor: "transparent", alignSelf: "flex-start" }}>
               <Pressable style={styles.walletButton}>
                 <View style={styles.flexRow}>
-                  <Text style={styles.walletButtonText}>Buy Now</Text>
+                  <Text style={styles.walletButtonText}>Change</Text>
                 </View>
               </Pressable>
               <Pressable style={styles.walletButton}>
                 <View style={styles.flexRow}>
-                  <Text style={styles.walletButtonText}>Send</Text>
+                  <Text style={styles.walletButtonText}>Transfer</Text>
                 </View>
               </Pressable>
             </View>
@@ -87,12 +87,12 @@ export default function HomeScreen({
         </View>
         {
           reshape2D([{title: "Vegan Resto", subtitle: "$1 off NFT"},
-          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i0.wp.com/images-prod.healthline.com/hlcmsresource/images/AN_images/eggs-breakfast-avocado-1296x728-header.jpg?w=1155&h=1528"},
-          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i0.wp.com/images-prod.healthline.com/hlcmsresource/images/AN_images/eggs-breakfast-avocado-1296x728-header.jpg?w=1155&h=1528"},
-          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i0.wp.com/images-prod.healthline.com/hlcmsresource/images/AN_images/eggs-breakfast-avocado-1296x728-header.jpg?w=1155&h=1528"},
-          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i0.wp.com/images-prod.healthline.com/hlcmsresource/images/AN_images/eggs-breakfast-avocado-1296x728-header.jpg?w=1155&h=1528"},
-          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i0.wp.com/images-prod.healthline.com/hlcmsresource/images/AN_images/eggs-breakfast-avocado-1296x728-header.jpg?w=1155&h=1528"},
-          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i0.wp.com/images-prod.healthline.com/hlcmsresource/images/AN_images/eggs-breakfast-avocado-1296x728-header.jpg?w=1155&h=1528"}]
+          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
+          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
+          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
+          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
+          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
+          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"}]
           , 3).map((ele : Array<Card>, idx) => {
             if (open.vouchers || idx == 0)
             return (
@@ -104,14 +104,16 @@ export default function HomeScreen({
                 }
                 return (
                   <View style={styles.cardsCard}>
-                    <View style={{flex: 1, overflow: "hidden"}}>
-                      <Image
-                        style={styles.cardsCardImg}
-                        source={ele.image ? {uri:ele.image} : AdaptiveIcon}
-                      />
+                    <View style={{flex: 1, overflow: "hidden", borderRadius: 10 }}>
+                      <View style={{flex: 1, overflow: "hidden" }}>
+                        <Image
+                          style={styles.cardsCardImg}
+                          source={ele.image ? {uri:ele.image} : AdaptiveIcon}
+                        />
+                      </View>
+                      <Text style={styles.cardsCardTitle}>{ele.title}</Text>
+                      <Text style={styles.cardsCardSubtitle}>{ele.subtitle}</Text>
                     </View>
-                    <Text style={styles.cardsCardTitle}>{ele.title}</Text>
-                    <Text style={styles.cardsCardSubtitle}>{ele.subtitle}</Text>
                   </View>
                 )
               })
@@ -136,12 +138,12 @@ export default function HomeScreen({
         </View>
         {
           reshape2D([{title: "Vegan Resto", subtitle: "$1 off NFT"},
-          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i0.wp.com/images-prod.healthline.com/hlcmsresource/images/AN_images/eggs-breakfast-avocado-1296x728-header.jpg?w=1155&h=1528"},
-          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i0.wp.com/images-prod.healthline.com/hlcmsresource/images/AN_images/eggs-breakfast-avocado-1296x728-header.jpg?w=1155&h=1528"},
-          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i0.wp.com/images-prod.healthline.com/hlcmsresource/images/AN_images/eggs-breakfast-avocado-1296x728-header.jpg?w=1155&h=1528"},
-          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i0.wp.com/images-prod.healthline.com/hlcmsresource/images/AN_images/eggs-breakfast-avocado-1296x728-header.jpg?w=1155&h=1528"},
-          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i0.wp.com/images-prod.healthline.com/hlcmsresource/images/AN_images/eggs-breakfast-avocado-1296x728-header.jpg?w=1155&h=1528"},
-          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i0.wp.com/images-prod.healthline.com/hlcmsresource/images/AN_images/eggs-breakfast-avocado-1296x728-header.jpg?w=1155&h=1528"}]
+          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
+          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
+          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
+          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
+          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
+          {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"}]
           , 3).map((ele : Array<Card>, idx) => {
             if (open.collectables || idx == 0)
             return (
@@ -153,14 +155,16 @@ export default function HomeScreen({
                 }
                 return (
                   <View style={styles.cardsCard}>
-                    <View style={{flex: 1, overflow: "hidden"}}>
-                      <Image
-                        style={styles.cardsCardImg}
-                        source={ele.image ? {uri:ele.image} : AdaptiveIcon}
-                      />
+                    <View style={{flex: 1, overflow: "hidden", borderRadius: 10 }}>
+                      <View style={{flex: 1, overflow: "hidden" }}>
+                        <Image
+                          style={styles.cardsCardImg}
+                          source={ele.image ? {uri:ele.image} : AdaptiveIcon}
+                        />
+                      </View>
+                      <Text style={styles.cardsCardTitle}>{ele.title}</Text>
+                      <Text style={styles.cardsCardSubtitle}>{ele.subtitle}</Text>
                     </View>
-                    <Text style={styles.cardsCardTitle}>{ele.title}</Text>
-                    <Text style={styles.cardsCardSubtitle}>{ele.subtitle}</Text>
                   </View>
                 )
               })
