@@ -1,0 +1,11 @@
+mutation CreateFirstType($args: CreateFirstTypeInput!) {
+  createFirstType(args: $args) {
+    id
+  }
+}
+
+mutation UpdateFirstType($id: ID!) {
+  updateFirstType(id: $id) {
+    id
+  }
+}

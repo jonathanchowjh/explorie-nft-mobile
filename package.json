@@ -3,11 +3,12 @@
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
-    "ios": "expo start --ios",
+    "ios": "open -a Simulator && expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest --watchAll",
-    "precommit": "eslint ."
+    "precommit": "eslint .",
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "jest": {
     "preset": "jest-expo"
@@ -26,6 +27,7 @@
     "expo-splash-screen": "~0.11.2",
     "expo-status-bar": "~1.0.4",
     "expo-web-browser": "~9.2.0",
+    "graphql": "^15.6.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
@@ -38,6 +40,12 @@
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
+    "@graphql-codegen/cli": "2.2.0",
+    "@graphql-codegen/fragment-matcher": "3.1.0",
+    "@graphql-codegen/introspection": "2.1.0",
+    "@graphql-codegen/typescript": "^2.2.2",
+    "@graphql-codegen/typescript-operations": "2.1.4",
+    "@graphql-codegen/typescript-react-apollo": "3.1.4",
     "@types/react": "~16.9.35",
     "@types/react-native": "~0.63.2",
     "@typescript-eslint/eslint-plugin": "^4.30.0",

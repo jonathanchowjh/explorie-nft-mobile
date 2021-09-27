@@ -21,6 +21,7 @@ import FirstStep from "../screens/Welcome/Step1";
 import SecondStep from "../screens/Welcome/Step2";
 import ThirdStepScreen from "../screens/Welcome/Step3";
 import LoginScreen from "../screens/LoginScreen";
+import HomeScreen from "../screens/HomeScreen";
 import MapsScreen from "../screens/MapsScreen";
 import {
   RootStackParamList,
@@ -53,24 +54,17 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator>
+      {/* root -> login (register) -> home (map | wallet | marketplace)
+        wallet (vouchers | collectables)
+      */}
       <Stack.Screen
         name="Root"
         component={FirstStep}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Step2"
-        component={SecondStep}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Step3"
-        component={ThirdStepScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
+        name="Home"
+        component={HomeScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

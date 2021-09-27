@@ -14,7 +14,7 @@ export default function FirstStepScreen({
       <View style={styles.footer}>
         <Button
           title="Next"
-          onPress={() => navigation.navigate("Step2")}
+          onPress={() => navigation.navigate("Home")}
         ></Button>
       </View>
     </View>

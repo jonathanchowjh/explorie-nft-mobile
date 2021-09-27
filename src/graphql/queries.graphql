@@ -1,0 +1,5 @@
+  query GetFirstTypes($status: Status!) {
+    getFirstType(status: $status) {
+      id
+    }
+  }
