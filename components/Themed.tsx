@@ -4,7 +4,12 @@
  */
 
 import * as React from 'react';
-import { Text as DefaultText, View as DefaultView } from 'react-native';
+import { Text as DefaultText,
+  View as DefaultView,
+  TextInput as DefaultTextInput,
+  Pressable as DefaultPressable,
+  ScrollView as DefaultScrollView
+} from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -43,4 +48,25 @@ export function View(props: ViewProps) {
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
+}
+
+export function ScrollView(props: ViewProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+
+  return <DefaultScrollView style={[{ backgroundColor }, style]} {...otherProps} />;
+}
+
+export function Pressable(props: ViewProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+
+  return <DefaultPressable style={[{ backgroundColor }, style]} {...otherProps} />;
+}
+
+export function TextInput(props: ViewProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+
+  return <DefaultTextInput style={[{ backgroundColor }, style]} {...otherProps} />;
 }
