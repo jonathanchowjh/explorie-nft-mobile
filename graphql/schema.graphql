@@ -1,0 +1,30 @@
+enum Status {
+  NotStarted
+  OnGoing
+  Completed
+}
+
+type FirstType {
+  id: ID!
+  status: Status!
+  createdAt: String
+  updatedAt: String
+}
+
+type Query {
+  getFirstType(status: Status!): [FirstType]
+}
+
+input CreateFirstTypeInput {
+    status: Status!
+}
+
+type Mutation {
+  createFirstType(args: CreateFirstTypeInput!): FirstType
+  updateFirstType(id: ID!): FirstType
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
