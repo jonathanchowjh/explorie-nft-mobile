@@ -9,7 +9,7 @@ import { Text as DefaultText,
   TextInput as DefaultTextInput,
   Pressable as DefaultPressable,
   ScrollView as DefaultScrollView,
-  TouchableOpacity as DefaultTouchableOpacity
+  TouchableOpacity
 } from 'react-native';
 
 import Colors from '../constants/Colors';
@@ -36,6 +36,9 @@ type ThemeProps = {
 
 export type TextProps = ThemeProps & DefaultText['props'];
 export type ViewProps = ThemeProps & DefaultView['props'];
+export type ScrollViewProps = ThemeProps & DefaultScrollView['props'];
+export type PressableProps = ThemeProps & DefaultPressable['props'];
+export type TextInputProps = ThemeProps & DefaultTextInput['props'];
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
@@ -51,28 +54,28 @@ export function View(props: ViewProps) {
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
 }
 
-export function ScrollView(props: ViewProps) {
+export function ScrollView(props: ScrollViewProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
   return <DefaultScrollView style={[{ backgroundColor }, style]} {...otherProps} />;
 }
 
-export function Pressable(props: ViewProps) {
+export function Pressable(props: PressableProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
   return <DefaultPressable style={[{ backgroundColor }, style]} {...otherProps} />;
 }
 
-export function TextInput(props: ViewProps) {
+export function TextInput(props: TextInputProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
   return <DefaultTextInput style={[{ backgroundColor }, style]} {...otherProps} />;
 }
 export const Button = ({ onPress, title, styles }: { onPress: () => void; title: string }) => (
-  <DefaultTouchableOpacity onPress={onPress} style={styles.buttonBackground}>
+  <TouchableOpacity onPress={onPress} style={styles.buttonBackground}>
     <Text style={styles.buttonText}>{title}</Text>
-  </DefaultTouchableOpacity>
+  </TouchableOpacity>
 );

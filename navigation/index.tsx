@@ -17,11 +17,8 @@ import { ColorSchemeName, Pressable } from "react-native";
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import NotFoundScreen from "../screens/NotFoundScreen";
-import FirstStep from "../screens/Welcome/Step1";
-// import SecondStep from "../screens/Welcome/Step2";
-// import ThirdStepScreen from "../screens/Welcome/Step3";
-// import LoginScreen from "../screens/LoginScreen";
 import HomeScreen from "../screens/HomeScreen";
+import WalletScreen from "../screens/WalletScreen";
 import MapsScreen from "../screens/MapsScreen";
 import RedeemerScreen from "../screens/RedeemScreen";
 import {
@@ -59,13 +56,13 @@ function RootNavigator() {
         wallet (vouchers | collectables)
       */}
       <Stack.Screen
-        name="Root"
-        component={FirstStep}
+        name="Home"
+        component={HomeScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Home"
-        component={HomeScreen}
+        name="Wallet"
+        component={WalletScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -95,7 +92,6 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
-
   return (
     <BottomTab.Navigator
       initialRouteName="TabOne"
@@ -105,7 +101,7 @@ function BottomTabNavigator() {
     >
       <BottomTab.Screen
         name="TabOne"
-        component={FirstStep}
+        component={WalletScreen}
         options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
           title: "Explory",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
@@ -128,7 +124,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="TabTwo"
-        component={TabTwoScreen}
+        component={MapsScreen}
         options={{
           title: "Tab Two",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,

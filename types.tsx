@@ -32,6 +32,7 @@ export type RootTabParamList = {
   Step3: undefined;
   Home: undefined;
   Login: undefined;
+  Wallet: undefined;
   ExploryMap: undefined;
 };
 

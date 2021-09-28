@@ -9,10 +9,9 @@ import {
   Pressable,
 } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
-import { shadow, noShadow } from "../constants/Styles";
-import { reshape2D } from "../constants/Functions";
-import AdaptiveIcon from "../assets/images/adaptive-icon.png";
+import { shadow } from "../constants/Styles";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { Header, IconInput, BannerGradient, Spacer } from "../components/Elements"
 
 interface Card {
   title: String;
@@ -20,15 +19,30 @@ interface Card {
   image?: String;
 }
 
-export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
-  const [text, onChangeText] = React.useState("");
-  const [open, onChangeOpen] = React.useState({
-    vouchers: false,
-    collectables: false,
-  });
+export default function HomeScreen({
+  navigation,
+}: RootTabScreenProps<"Home">) {
+  const [search, onChangeSearch] = React.useState("");
+  const [open, onChangeOpen] = React.useState({ vouchers: false, collectables: false });
 
   return (
     <ScrollView style={styles.container}>
+      <Header />
+      <BannerGradient
+        title="Welcome, Sam"
+        subtitle="Home Page"
+        colorOne="rgba(255,0,0,0.8)"
+        colorTwo="rgba(255,0,0,0.4)"
+      />
+      <Spacer />
+      <IconInput
+        value={search}
+        onChangeValue={onChangeSearch}
+        placeholder="Search"
+        iconL="search"
+      />
+      <Spacer />
+
       <View style={styles.header}>
         <View style={styles.headerWelcome}>
           <Text style={styles.headerWelcomeText}>Welcome, Sam</Text>
@@ -40,251 +54,10 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
           </Pressable>
         </View>
       </View>
-
-      <View style={styles.search}>
-        <View style={styles.flexRow}>
-          <Icon name="search" size={20} color="grey" />
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
-            placeholder="Search"
-          />
-        </View>
-      </View>
-
-      <View style={styles.wallet}>
-        <LinearGradient
-          colors={["rgba(255,0,0,0.8)", "rgba(255,0,0,0.4)"]}
-          style={{ flex: 1, padding: 15 }}
-        >
-          <View style={styles.flexRow}>
-            <View
-              style={{
-                flex: 2,
-                backgroundColor: "transparent",
-                alignSelf: "flex-start",
-              }}
-            >
-              <Text style={styles.walletTitle}>Wallet</Text>
-              <Text style={styles.walletSubtitle}>EXP Balance: 5.200</Text>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: "transparent",
-                alignSelf: "flex-start",
-              }}
-            >
-              <Pressable style={styles.walletButton}>
-                <View style={styles.flexRow}>
-                  <Text style={styles.walletButtonText}>Change</Text>
-                </View>
-              </Pressable>
-              <Pressable style={styles.walletButton}>
-                <View style={styles.flexRow}>
-                  <Text style={styles.walletButtonText}>Transfer</Text>
-                </View>
-              </Pressable>
-            </View>
-          </View>
-        </LinearGradient>
-      </View>
-
-      <View style={styles.cards}>
-        <View style={styles.cardsHead}>
-          <Text style={styles.cardsHeadText}>Your Vouchers</Text>
-          <Pressable
-            style={styles.cardsHeadMore}
-            onPress={() => {
-              onChangeOpen({ ...open, vouchers: !open.vouchers });
-            }}
-          >
-            <View style={styles.flexRow}>
-              <Text style={styles.cardsHeadMoreText}>View More</Text>
-            </View>
-          </Pressable>
-        </View>
-        {reshape2D(
-          [
-            { title: "Vegan Resto", subtitle: "$1 off NFT" },
-            {
-              title: "Vegan Resto",
-              subtitle: "$1 off NFT",
-              image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-            },
-            {
-              title: "Vegan Resto",
-              subtitle: "$1 off NFT",
-              image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-            },
-            {
-              title: "Vegan Resto",
-              subtitle: "$1 off NFT",
-              image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-            },
-            {
-              title: "Vegan Resto",
-              subtitle: "$1 off NFT",
-              image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-            },
-            {
-              title: "Vegan Resto",
-              subtitle: "$1 off NFT",
-              image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-            },
-            {
-              title: "Vegan Resto",
-              subtitle: "$1 off NFT",
-              image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-            },
-          ],
-          3
-        ).map((ele: Array<Card>, idx) => {
-          if (open.vouchers || idx == 0)
-            return (
-              <View style={styles.flexRow}>
-                {ele.map((ele: Card) => {
-                  if (Object.keys(ele).length == 0) {
-                    return (
-                      <View
-                        style={{
-                          ...styles.cardsCard,
-                          ...noShadow,
-                          backgroundColor: "transparent",
-                        }}
-                      ></View>
-                    );
-                  }
-                  return (
-                    <View style={styles.cardsCard}>
-                      <View
-                        style={{
-                          flex: 1,
-                          overflow: "hidden",
-                          borderRadius: 10,
-                        }}
-                      >
-                        <View style={{ flex: 1, overflow: "hidden" }}>
-                          <Image
-                            style={styles.cardsCardImg}
-                            source={
-                              ele.image ? { uri: ele.image } : AdaptiveIcon
-                            }
-                          />
-                        </View>
-                        <Text style={styles.cardsCardTitle}>{ele.title}</Text>
-                        <Text style={styles.cardsCardSubtitle}>
-                          {ele.subtitle}
-                        </Text>
-                      </View>
-                    </View>
-                  );
-                })}
-              </View>
-            );
-        })}
-      </View>
-
-      <View style={styles.cards}>
-        <View style={styles.cardsHead}>
-          <Text style={styles.cardsHeadText}>Your Collectables</Text>
-          <Pressable
-            style={styles.cardsHeadMore}
-            onPress={() => {
-              onChangeOpen({ ...open, collectables: !open.collectables });
-            }}
-          >
-            <View style={styles.flexRow}>
-              <Text style={styles.cardsHeadMoreText}>View More</Text>
-            </View>
-          </Pressable>
-        </View>
-        {reshape2D(
-          [
-            { title: "Vegan Resto", subtitle: "$1 off NFT" },
-            {
-              title: "Vegan Resto",
-              subtitle: "$1 off NFT",
-              image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-            },
-            {
-              title: "Vegan Resto",
-              subtitle: "$1 off NFT",
-              image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-            },
-            {
-              title: "Vegan Resto",
-              subtitle: "$1 off NFT",
-              image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-            },
-            {
-              title: "Vegan Resto",
-              subtitle: "$1 off NFT",
-              image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-            },
-            {
-              title: "Vegan Resto",
-              subtitle: "$1 off NFT",
-              image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-            },
-            {
-              title: "Vegan Resto",
-              subtitle: "$1 off NFT",
-              image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-            },
-          ],
-          3
-        ).map((ele: Array<Card>, idx) => {
-          if (open.collectables || idx == 0)
-            return (
-              <View style={styles.flexRow}>
-                {ele.map((ele: Card) => {
-                  if (Object.keys(ele).length == 0) {
-                    return (
-                      <View
-                        style={{
-                          ...styles.cardsCard,
-                          ...noShadow,
-                          backgroundColor: "transparent",
-                        }}
-                      ></View>
-                    );
-                  }
-                  return (
-                    <View style={styles.cardsCard}>
-                      <View
-                        style={{
-                          flex: 1,
-                          overflow: "hidden",
-                          borderRadius: 10,
-                        }}
-                      >
-                        <View style={{ flex: 1, overflow: "hidden" }}>
-                          <Image
-                            style={styles.cardsCardImg}
-                            source={
-                              ele.image ? { uri: ele.image } : AdaptiveIcon
-                            }
-                          />
-                        </View>
-                        <Text style={styles.cardsCardTitle}>{ele.title}</Text>
-                        <Text style={styles.cardsCardSubtitle}>
-                          {ele.subtitle}
-                        </Text>
-                      </View>
-                    </View>
-                  );
-                })}
-              </View>
-            );
-        })}
-      </View>
-
       <View style={{}}>
         <Button
           title="Next"
-          onPress={() => navigation.navigate("ExploryMap")}
+          onPress={() => navigation.navigate("Wallet")}
         ></Button>
       </View>
     </ScrollView>

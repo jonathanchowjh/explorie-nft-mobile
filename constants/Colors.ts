@@ -4,6 +4,7 @@ export const darkBlue = "#010326";
 export const yellow = "#F2CB57";
 export const red = "#F23838";
 export const white = "#FFFFFF"
+export const redLogo = "#e9413c"
 
 /**
  * TODO implement color scheme above
