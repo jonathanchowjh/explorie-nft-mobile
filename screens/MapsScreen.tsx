@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import MapView, { Marker } from "react-native-maps";
-import { StyleSheet, View, Dimensions, Image } from "react-native";
-import { View as ThemedView, Text, Button } from "../components/Themed";
+import { StyleSheet, View, Dimensions } from "react-native";
+import { View as ThemedView, Text } from "../components/Themed";
+import { NFTBox } from "../components/NFTBox";
 import flagPinkImg from "../assets/images/flag-pink.png";
 import oni from "../assets/images/oni.png";
 import kong from "../assets/images/pixilart.png";
+import sutu from "../assets/images/sutu.gif";
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,6 +24,13 @@ const demoNfts = [
       latitude: LATITUDE + SPACE,
       longitude: LONGITUDE + SPACE,
     },
+    distance: "2 Km",
+    rating: "4,8 Rating",
+    location: "Grafitti Zone @ Mauer Park",
+    locationImage:
+      "https://lh5.googleusercontent.com/p/AF1QipOa23rPK0ZG_8VcP8D5w0GO1xvrk6SZ4XNxC6Rr=w408-h306-k-no",
+    locationDescription:
+      "Mauerpark is a public linear park in Berlin's Prenzlauer Berg district. The name translates to 'Wall Park', referring to its status as a former part of the Berlin Wall and its Death Strip. The park is located at the border of Prenzlauer Berg and Gesundbrunnen district of former West Berlin.",
     centerOffset: {
       x: -18,
       y: -60,
@@ -34,6 +43,13 @@ const demoNfts = [
   },
   {
     title: "Cyber kongz #0000",
+    location: "betahaus @ Kreuzberg",
+    locationImage:
+      "https://lh5.googleusercontent.com/p/AF1QipMF7ZT-a5V0BIgu3ZvstuLKHj9ZFOlOvQt18Zge=w426-h240-k-no",
+    locationDescription:
+      "betahaus | Kreuzberg is our HQ space, and in some ways, our heart and soul. It's a coworking and event space that's been serving the city's startup and freelancer community since 2009. In 2018, we moved into a building at the edge of Kreuzberg with a long legacy of influential tenants. We've restored the space to include modern coworking areas, event spaces, team rooms, balconies, café, and rooftop terrace. As a member, you'll join an international community of 500+ freelancers, entrepreneurs, startups, and corporates. Let's work together!",
+    distance: "500 m",
+    rating: "2,8 Rating",
     coordinates: {
       latitude: LATITUDE - SPACE,
       longitude: LONGITUDE - SPACE,
@@ -49,7 +65,14 @@ const demoNfts = [
     image: kong,
   },
   {
-    title: "Crypto punk #7777",
+    title: "Sutu Data Healer",
+    location: "Martin-Gropius-Bau @ Mitte",
+    locationImage:
+      "https://lh5.googleusercontent.com/p/AF1QipPprvlubkbvLCzPVl_YefU4WryX6Jf0LogsvDn9=w408-h271-k-no",
+    locationDescription:
+      "Martin-Gropius-Bau, commonly known as Gropius Bau, is an important exhibition building in Berlin, Germany. Originally a museum of applied arts, the building has been a listed historical monument since 1966. It is located at 7 Niederkirchnerstraße in Berlin-Kreuzber",
+    distance: "1.4 Km",
+    rating: "4,1 Rating",
     coordinates: {
       latitude: LATITUDE + SPACE,
       longitude: LONGITUDE - SPACE,
@@ -62,17 +85,17 @@ const demoNfts = [
       x: 0.84,
       y: 1,
     },
-    image: kong,
+    image: sutu,
   },
 ];
 
 export default function MapsScreen({ navigation }) {
-  const [activeNft, setActiveNft] = useState(1);
+  const [activeNft, setActiveNft] = useState(2);
+  const [redeemerActive, setRedeemerActive] = useState(false);
 
   return (
     <View style={styles.container}>
       <MapView
-        //provider={this.props.provider}
         style={styles.map}
         userInterfaceStyle="dark"
         initialRegion={{
@@ -94,64 +117,19 @@ export default function MapsScreen({ navigation }) {
           ></Marker>
         ))}
       </MapView>
-      <ThemedView style={styles.nftView}>
-        <Text style={styles.title}>{demoNfts[activeNft].title}</Text>
-        <ThemedView style={styles.nftRow}>
-          <Image
-            source={demoNfts[activeNft].image}
-            style={styles.tinyNft}
-          ></Image>
-          <ThemedView style={styles.nftColumn}>
-            <Text style={styles.nftText}>{demoNfts[activeNft].title}</Text>
-            <Text style={styles.nftDistance}>5min away</Text>
-          </ThemedView>
-        </ThemedView>
-        <View style={styles.buttonsRow}>
-          <Button
-            onPress={() => console.log("pressed")}
-            title="Redeem"
-            styles={{
-              buttonText: {
-                color: "red",
-                fontWeight: "bold",
-              },
-              buttonBackground: {
-                borderRadius: 10,
-                padding: 15,
-                marginRight: 5,
-                alignItems: "center",
-                flexGrow: 2,
-                backgroundColor: "white",
-              },
-            }}
-          ></Button>
-          <Button
-            onPress={() => console.log("pressed")}
-            title="+"
-            styles={{
-              buttonText: {
-                color: "white",
-                fontWeight: "bold",
-              },
-              buttonBackground: {
-                borderRadius: 10,
-                padding: 18,
-                alignItems: "center",
-                flexGrow: 1,
-                backgroundColor: "red",
-              },
-            }}
-          ></Button>
-        </View>
+      <ThemedView
+        style={{
+          ...styles.nftView,
+          height: redeemerActive ? height - 60 : "auto",
+        }}
+      >
+        <NFTBox nft={demoNfts[activeNft]} navigation={navigation} />
       </ThemedView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  buttonsRow: {
-    flexDirection: "row",
-  },
   container: {
     ...StyleSheet.absoluteFillObject,
     alignItems: "center",
@@ -159,25 +137,6 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
-  },
-  nftColumn: {
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  nftDistance: {
-    color: "#3B3B3B",
-    fontSize: 13,
-  },
-  nftRow: {
-    borderRadius: 15,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    marginBottom: 5,
-    padding: 10,
-  },
-  nftText: {
-    fontSize: 13,
-    fontWeight: "bold",
   },
   nftView: {
     backgroundColor: "#F2F6F9",
@@ -188,14 +147,5 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     paddingTop: 25,
     width: width - 30,
-  },
-  tinyNft: {
-    height: 50,
-    marginRight: 10,
-    width: 50,
-  },
-  title: {
-    fontWeight: "bold",
-    marginLeft: 10,
   },
 });

@@ -18,11 +18,12 @@ import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import FirstStep from "../screens/Welcome/Step1";
-import SecondStep from "../screens/Welcome/Step2";
-import ThirdStepScreen from "../screens/Welcome/Step3";
-import LoginScreen from "../screens/LoginScreen";
+// import SecondStep from "../screens/Welcome/Step2";
+// import ThirdStepScreen from "../screens/Welcome/Step3";
+// import LoginScreen from "../screens/LoginScreen";
 import HomeScreen from "../screens/HomeScreen";
 import MapsScreen from "../screens/MapsScreen";
+import RedeemerScreen from "../screens/RedeemScreen";
 import {
   RootStackParamList,
   RootTabParamList,
@@ -70,6 +71,11 @@ function RootNavigator() {
       <Stack.Screen
         name="ExploryMap"
         component={MapsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Redeem"
+        component={RedeemerScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
