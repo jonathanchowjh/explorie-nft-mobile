@@ -42,29 +42,32 @@ export const ButtonSmall = (props: {
 }
 
 export const Header = (props: {
-
+  navigation: {
+    navigate: (a: string) => void
+  }
 }) => {
   return (
     <View style={{ ...styles.flexRow,
-      height: 60,
+      maxHeight: 50,
+      minHeight: 50,
+      margin: 10,
+      marginTop: 30,
       marginBottom: 0,
       padding: 10,
-      backgroundColor: "transparent" }}>
-      <ButtonSmall
-        icon="navicon"
-        css={{ padding: 5, flex: 10 }}
-        onClick={() => {}}
-      />
-      <Text style={{
-        color: "red",
-        fontSize: 20,
-        fontWeight: "700",
-        flex: 10
-      }}>Explorie</Text>
-      <View style={{ ...styles.flexRow, flex: 7, justifyContent: "flex-end"}}>
+      paddingBottom: 5,
+      backgroundColor: "white" }}>
+      <Pressable style={{flex: 10}} onPress={() => props.navigation.navigate("Home")}>
+        <Text style={{
+          color: "red",
+          fontSize: 20,
+          fontWeight: "700"
+        }}>Explorie</Text>
+      </Pressable>
+      
+      <View style={{ ...styles.flexRow, flex: 2, justifyContent: "flex-end"}}>
         <ButtonSmall
           icon="search"
-          css={{ padding: 5, marginLeft: 10 }}
+          css={{ padding: 5, flex: 1 }}
           onClick={() => {}}
         />
         <ButtonSmall
@@ -73,6 +76,45 @@ export const Header = (props: {
           onClick={() => {}}
         />
       </View>
+    </View>
+  )
+}
+
+export const Footer = (props: {
+  navigation: {
+    navigate: (a: string) => void
+  }
+}) => {
+  return (
+    <View style={{ ...styles.flexRow,
+      maxHeight: 60,
+      minHeight: 60,
+      margin: 10,
+      marginTop: 0,
+      marginBottom: 20,
+      padding: 10,
+      justifyContent: "space-around",
+      backgroundColor: "white" }}>
+        <ButtonSmall
+          icon="search"
+          css={{ padding: 5 }}
+          onClick={() => {}}
+        />
+        <ButtonSmall
+          icon="qrcode"
+          css={{ padding: 5 }}
+          onClick={() => {}}
+        />
+        <ButtonSmall
+          icon="search"
+          css={{ padding: 5 }}
+          onClick={() => {}}
+        />
+        <ButtonSmall
+          icon="qrcode"
+          css={{ padding: 5 }}
+          onClick={() => {}}
+        />
     </View>
   )
 }
@@ -122,6 +164,8 @@ export const BannerGradient = (props : {
   subtitle: string,
 
   css?: StringMap,                // design
+  cssTitle?: StringMap
+  cssSubtitle?: StringMap
   image?: string
   imageBool?: boolean
   profile?: string
@@ -142,8 +186,8 @@ export const BannerGradient = (props : {
           {/* === BANNER === */}
           <View style={{ ...styles.transparent, flex: 2, justifyContent: "space-between"}}>
             <View style={styles.transparent}>
-              <Text style={styles.bannerTitle}>{props.title}</Text>
-              <Text style={styles.bannerSubtitle}>{props.subtitle}</Text>
+              <Text style={{ ...styles.bannerTitle, ...props.cssTitle }}>{props.title}</Text>
+              <Text style={{ ...styles.bannerSubtitle, ...props.cssSubtitle }}>{props.subtitle}</Text>
             </View>
             {
               imageBool || imageBool == undefined || imageBool == null ? <Image
