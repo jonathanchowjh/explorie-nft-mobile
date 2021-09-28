@@ -27,12 +27,16 @@ export default function HomeScreen({
 
   return (
     <ScrollView style={styles.container}>
-      <Header />
+      <Header
+        
+      />
       <BannerGradient
         title="Welcome, Sam"
         subtitle="Home Page"
         colorOne="rgba(255,0,0,0.8)"
         colorTwo="rgba(255,0,0,0.4)"
+        profile="https://i.ibb.co/7b4DSq0/ExpImage.png"
+        imageBool={false}
       />
       <Spacer />
       <IconInput

@@ -8,7 +8,7 @@ import { reshape2D } from "../constants/Functions"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LogoLabel from "../assets/images/logo-label.png"
 
-interface StringMap { [key: string]: string; }
+interface StringMap { [key: string]: any; }
 
 export const Spacer = () => <View style={{
   height: 10,
@@ -18,13 +18,23 @@ export const Spacer = () => <View style={{
 
 export const ButtonSmall = (props: {
   title?: string,
-  onClick?: string
+  icon?: string,
+  onClick?: () => void,
+  css?: StringMap
 }) => {
   return (
-    props.title ? (
-      <Pressable style={styles.bannerButton}>
+    props.title || props.icon ? (
+      <Pressable
+        style={{ ...styles.smallButton, ...props.css }}
+        onPress={props.onClick ? props.onClick : () => {}}
+      >
         <View style={styles.flexRow}>
-          <Text style={styles.bannerButtonText}>{props.title}</Text>
+          {
+            props.icon ? <Icon name={props.icon} size={16} color="grey" /> : <View />
+          }
+          {
+            props.title ? <Text style={styles.smallButtonText}>{props.title}</Text> : <View />
+          }
         </View>
       </Pressable>
     ) : (<View />)
@@ -35,8 +45,34 @@ export const Header = (props: {
 
 }) => {
   return (
-    <View>
-      <Text>HEADER</Text>
+    <View style={{ ...styles.flexRow,
+      height: 60,
+      marginBottom: 0,
+      padding: 10,
+      backgroundColor: "transparent" }}>
+      <ButtonSmall
+        icon="navicon"
+        css={{ padding: 5, flex: 10 }}
+        onClick={() => {}}
+      />
+      <Text style={{
+        color: "red",
+        fontSize: 20,
+        fontWeight: "700",
+        flex: 10
+      }}>Explorie</Text>
+      <View style={{ ...styles.flexRow, flex: 7, justifyContent: "flex-end"}}>
+        <ButtonSmall
+          icon="search"
+          css={{ padding: 5, marginLeft: 10 }}
+          onClick={() => {}}
+        />
+        <ButtonSmall
+          icon="qrcode"
+          css={{ padding: 5, marginLeft: 10 }}
+          onClick={() => {}}
+        />
+      </View>
     </View>
   )
 }
@@ -87,12 +123,15 @@ export const BannerGradient = (props : {
 
   css?: StringMap,                // design
   image?: string
+  imageBool?: boolean
+  profile?: string
 
   bOne?: string,                  // buttons
   bTwo?: string,
-  bOneOnclick?: string,
-  bTwoOnclick?: string
+  bOneOnclick?: () => void,
+  bTwoOnclick?: () => void
 }) => {
+  const { imageBool } = props
   return (
     <View style={{ ...styles.banner, ...props.css }}>
       <LinearGradient
@@ -106,21 +145,44 @@ export const BannerGradient = (props : {
               <Text style={styles.bannerTitle}>{props.title}</Text>
               <Text style={styles.bannerSubtitle}>{props.subtitle}</Text>
             </View>
-            <Image
-              style={styles.bannerIcon}
-              source={props.image ? ({ uri: props.image }) : LogoLabel}
-            />
+            {
+              imageBool || imageBool == undefined || imageBool == null ? <Image
+                style={styles.bannerIcon}
+                source={props.image ? ({ uri: props.image }) : LogoLabel}
+              /> : <View />
+            }
           </View>
           {/* === BUTTONS === */}
           <View style={{ ...styles.transparent, flex: 1, alignSelf: "flex-start" }}>
-            <ButtonSmall
-              title={props.bOne}
-              onClick={props.bOneOnclick}
-            />
-            <ButtonSmall
-              title={props.bTwo}
-              onClick={props.bTwoOnclick}
-            />
+            {
+              props.bOne || props.bTwo ? (
+                <View>
+                  <ButtonSmall
+                    title={props.bOne}
+                    onClick={props.bOneOnclick}
+                  />
+                  <Spacer />
+                  <ButtonSmall
+                    title={props.bTwo}
+                    onClick={props.bTwoOnclick}
+                  />
+                </View>
+              ) : <View />
+            }
+            {
+              (!props.bOne && !props.bTwo) && props.profile ? (
+                <View style={{ ...styles.flexRow,
+                  aspectRatio: 1,
+                  borderRadius: 100,
+                  overflow: "hidden",
+                  justifyContent: "flex-end" }}>
+                  <Image
+                    style={styles.bannerProfile}
+                    source={{ uri: props.profile }}
+                  />
+                </View>
+              ) : <View />
+            }
           </View>
         </View>
       </LinearGradient>
@@ -129,13 +191,6 @@ export const BannerGradient = (props : {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    paddingTop: 40,
-    paddingBottom: 40,
-    overflow: "scroll"
-  },
   flexRow: {
     flex: 1,
     flexDirection: "row",
@@ -145,6 +200,20 @@ const styles = StyleSheet.create({
   },
   transparent: {
     backgroundColor: "transparent"
+  },
+
+  // SMALL BUTTON
+  smallButton: {
+    backgroundColor: "white",
+    height: 30,
+    borderRadius: 7
+  },
+  smallButtonText: {
+    flex: 1,
+    textAlign: "center",
+    fontSize: 15,
+    fontWeight: "700",
+    color: "red"
   },
 
   // ICON INPUT
@@ -181,24 +250,17 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "white"
   },
-  bannerButton: {
-    backgroundColor: "white",
-    height: 30,
-    margin: 7,
-    borderRadius: 10
-  },
-  bannerButtonText: {
-    flex: 1,
-    textAlign: "center",
-    fontSize: 15,
-    fontWeight: "700",
-    color: "red"
-  },
   bannerIcon: {
     marginTop: 5,
     height: "100%",
     width: "70%",
     resizeMode: "stretch",
+    flex: 1,
+  },
+  bannerProfile: {
+    height: "100%",
+    width: "100%",
+    resizeMode: "cover",
     flex: 1,
   },
   
