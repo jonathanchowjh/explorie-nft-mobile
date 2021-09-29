@@ -11,7 +11,15 @@ import {
 import { RootTabScreenProps } from "../types";
 import { shadow } from "../constants/Styles";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Header, Footer, IconInput, BannerGradient, Spacer, ProgressBar, CardsView } from "../components/Elements"
+import {
+  Header,
+  Footer,
+  IconInput,
+  BannerGradient,
+  Spacer,
+  ProgressBar,
+  CardsView,
+} from "../components/Elements";
 
 interface Card {
   title: String;
@@ -19,11 +27,12 @@ interface Card {
   image?: String;
 }
 
-export default function HomeScreen({
-  navigation,
-}: RootTabScreenProps<"Home">) {
+export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
   const [search, onChangeSearch] = React.useState("");
-  const [open, onChangeOpen] = React.useState({ vouchers: false, collectables: false });
+  const [open, onChangeOpen] = React.useState({
+    vouchers: false,
+    collectables: false,
+  });
 
   return (
     <View style={{ flex: 1 }}>
@@ -35,8 +44,8 @@ export default function HomeScreen({
           colorOne="rgba(0,0,0,0)"
           colorTwo="rgba(0,0,0,0)"
           profile="https://i.ibb.co/7b4DSq0/ExpImage.png"
-          cssTitle={{color: "black"}}
-          cssSubtitle={{color: "orange"}}
+          cssTitle={{ color: "black" }}
+          cssSubtitle={{ color: "orange" }}
           imageBool={false}
         />
         <Spacer />
@@ -92,7 +101,7 @@ const styles = StyleSheet.create({
     flex: 1,
     overflow: "scroll",
     padding: 15,
-    paddingTop: 5
+    paddingTop: 5,
   },
   // Search
   search: {
