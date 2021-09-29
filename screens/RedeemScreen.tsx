@@ -80,7 +80,7 @@ export default function RedeemScreen({ route, navigation }) {
               backgroundColor: "red",
             },
           }}
-          onPress={() => console.log("pressed")}
+          onPress={() => navigation.navigate("Scanner", { ...route.params })}
         ></Button>
       </View>
     </View>
