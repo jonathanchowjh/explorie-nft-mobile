@@ -13,9 +13,12 @@ import { shadow } from "../constants/Styles";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {
   Header,
+  Footer,
   IconInput,
   BannerGradient,
   Spacer,
+  ProgressBar,
+  CardsView,
 } from "../components/Elements";
 
 interface Card {
@@ -32,43 +35,64 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
   });
 
   return (
-    <ScrollView style={styles.container}>
-      <Header />
-      <BannerGradient
-        title="Welcome, Sam"
-        subtitle="Home Page"
-        colorOne="rgba(255,0,0,0.8)"
-        colorTwo="rgba(255,0,0,0.4)"
-        profile="https://i.ibb.co/7b4DSq0/ExpImage.png"
-        imageBool={false}
-      />
-      <Spacer />
-      <IconInput
-        value={search}
-        onChangeValue={onChangeSearch}
-        placeholder="Search"
-        iconL="search"
-      />
-      <Spacer />
-
-      <View style={styles.header}>
-        <View style={styles.headerWelcome}>
-          <Text style={styles.headerWelcomeText}>Welcome, Sam</Text>
+    <View style={{ flex: 1 }}>
+      <Header navigation={navigation} />
+      <ScrollView style={styles.container}>
+        <BannerGradient
+          title="Welcome, Sam"
+          subtitle="Apprentice"
+          colorOne="rgba(0,0,0,0)"
+          colorTwo="rgba(0,0,0,0)"
+          profile="https://i.ibb.co/7b4DSq0/ExpImage.png"
+          cssTitle={{ color: "black" }}
+          cssSubtitle={{ color: "orange" }}
+          imageBool={false}
+        />
+        <Spacer />
+        <View style={{ flex: 1, flexDirection: "row" }}>
+          <ProgressBar
+            icon="bicycle"
+            iconColor="rgb(0,80,0)"
+            text="30 km travelled"
+            progressColor="rgb(0,80,0)"
+            progressWidth={150}
+          />
+          <Spacer css={{ flex: 0.1 }} />
+          <ProgressBar
+            icon="cubes"
+            iconColor="rgb(0,80,0)"
+            text="20 NFTs collected"
+            progressColor="rgb(0,80,0)"
+            progressWidth={150}
+          />
         </View>
-        <View style={{ flex: 1 }}>
-          <Pressable style={styles.headerWallet}>
-            <Text style={styles.headerWalletText}>#10328329</Text>
-            <Icon name="copy" size={20} color="grey" />
-          </Pressable>
+        <Spacer />
+        <ProgressBar
+          icon="check"
+          iconColor="#e39c19"
+          text="Daily Tasks"
+          progressColor="#e39c19"
+          progressWidth={200}
+        />
+        <Spacer />
+        <CardsView />
+        <CardsView />
+        <IconInput
+          value={search}
+          onChangeValue={onChangeSearch}
+          placeholder="Search"
+          iconL="search"
+        />
+        <Spacer />
+        <View style={{}}>
+          <Button
+            title="Next"
+            onPress={() => navigation.navigate("Wallet")}
+          ></Button>
         </View>
-      </View>
-      <View style={{}}>
-        <Button
-          title="Next"
-          onPress={() => navigation.navigate("Wallet")}
-        ></Button>
-      </View>
-    </ScrollView>
+      </ScrollView>
+      <Footer navigation={navigation} />
+    </View>
   );
 }
 
@@ -76,42 +100,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     overflow: "scroll",
-    padding: 20,
-    paddingBottom: 40,
-    paddingTop: 40,
+    padding: 15,
+    paddingTop: 5,
   },
-  // HEADER
-  header: {
-    display: "flex",
-    flexDirection: "row",
-    height: 80,
-  },
-  headerWelcome: {
-    alignSelf: "center",
-    flex: 1,
-    margin: 10,
-  },
-  headerWelcomeText: {
-    fontSize: 20,
-    fontWeight: "700",
-  },
-  headerWallet: {
-    ...shadow,
-    alignItems: "center",
-    borderRadius: 20,
-    flex: 1,
-    flexDirection: "row",
-    margin: 10,
-    padding: 10,
-  },
-  headerWalletText: {
-    alignSelf: "center",
-    flex: 1,
-    fontSize: 15,
-    fontWeight: "500",
-    textAlign: "center",
-  },
-
   // Search
   search: {
     ...shadow,
