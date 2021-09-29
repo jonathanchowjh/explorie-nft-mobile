@@ -11,7 +11,12 @@ import {
 import { RootTabScreenProps } from "../types";
 import { shadow } from "../constants/Styles";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Header, IconInput, BannerGradient, Spacer } from "../components/Elements"
+import {
+  Header,
+  IconInput,
+  BannerGradient,
+  Spacer,
+} from "../components/Elements";
 
 interface Card {
   title: String;
@@ -19,17 +24,16 @@ interface Card {
   image?: String;
 }
 
-export default function HomeScreen({
-  navigation,
-}: RootTabScreenProps<"Home">) {
+export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
   const [search, onChangeSearch] = React.useState("");
-  const [open, onChangeOpen] = React.useState({ vouchers: false, collectables: false });
+  const [open, onChangeOpen] = React.useState({
+    vouchers: false,
+    collectables: false,
+  });
 
   return (
     <ScrollView style={styles.container}>
-      <Header
-        
-      />
+      <Header />
       <BannerGradient
         title="Welcome, Sam"
         subtitle="Home Page"
