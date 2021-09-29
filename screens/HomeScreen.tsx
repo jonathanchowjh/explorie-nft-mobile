@@ -11,7 +11,7 @@ import {
 import { RootTabScreenProps } from "../types";
 import { shadow } from "../constants/Styles";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Header, Footer, IconInput, BannerGradient, Spacer } from "../components/Elements"
+import { Header, Footer, IconInput, BannerGradient, Spacer, ProgressBar, CardsView } from "../components/Elements"
 
 interface Card {
   title: String;
@@ -40,6 +40,34 @@ export default function HomeScreen({
           imageBool={false}
         />
         <Spacer />
+        <View style={{ flex: 1, flexDirection: "row" }}>
+          <ProgressBar
+            icon="bicycle"
+            iconColor="rgb(0,80,0)"
+            text="30 km travelled"
+            progressColor="rgb(0,80,0)"
+            progressWidth={150}
+          />
+          <Spacer css={{ flex: 0.1 }} />
+          <ProgressBar
+            icon="cubes"
+            iconColor="rgb(0,80,0)"
+            text="20 NFTs collected"
+            progressColor="rgb(0,80,0)"
+            progressWidth={150}
+          />
+        </View>
+        <Spacer />
+        <ProgressBar
+          icon="check"
+          iconColor="#e39c19"
+          text="Daily Tasks"
+          progressColor="#e39c19"
+          progressWidth={200}
+        />
+        <Spacer />
+        <CardsView />
+        <CardsView />
         <IconInput
           value={search}
           onChangeValue={onChangeSearch}
