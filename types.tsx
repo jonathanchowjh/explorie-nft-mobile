@@ -34,7 +34,27 @@ export type RootTabParamList = {
   Login: undefined;
   Wallet: undefined;
   ExploryMap: undefined;
+  Search: undefined;
 };
+
+export type Nft = {                      // Asset name -> unique id? 
+  asset_name: string
+  name: string,                   // human readable name
+  image?: string | Array<any>,    // bitmap? how many types supported?
+  mediaType?: string,
+  description?: string,
+  geoLocation?: string,
+  files?: Array<{                  // What type of files supported for MVP
+    name: string,
+    mediaType: string,
+    src: string | Array<any>
+  }>,
+  company?: string,                // SUGGESTED
+  collection?: string,             // SUGGESTED
+  type?: string,                   // SUGGESTED voucher / collectable
+  rarity?: string | null           // SUGGESTED for collectables
+  subtitle: string
+}
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<
   BottomTabScreenProps<RootTabParamList, Screen>,

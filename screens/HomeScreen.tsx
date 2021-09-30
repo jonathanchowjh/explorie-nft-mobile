@@ -75,15 +75,36 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
           progressWidth={200}
         />
         <Spacer />
-        <CardsView />
-        <CardsView />
-        <IconInput
-          value={search}
-          onChangeValue={onChangeSearch}
-          placeholder="Search"
-          iconL="search"
+        <CardsView
+          items={[
+            { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
+            { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
+            { asset_name: "3", name: "Name Name Name", subtitle: "Sub Subtitle", image: "" }
+          ]}
+          title="Popular NFTs"
+
+          navigation={navigation}
         />
-        <Spacer />
+        <CardsView
+          items={[
+            { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
+            { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
+            { asset_name: "3", name: "Name Name Name", subtitle: "Sub Subtitle", image: "" }
+          ]}
+          title="Vouchers (< 5km)"
+
+          navigation={navigation}
+        />
+        <CardsView
+          items={[
+            { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
+            { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
+            { asset_name: "3", name: "Name Name Name", subtitle: "Sub Subtitle", image: "" }
+          ]}
+          title="Collectables (< 5km)"
+
+          navigation={navigation}
+        />
         <View style={{}}>
           <Button
             title="Next"

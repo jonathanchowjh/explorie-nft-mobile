@@ -6,8 +6,9 @@ import { RootTabScreenProps } from "../types";
 import { shadow, noShadow } from "../constants/Styles"
 import { reshape2D } from "../constants/Functions"
 import * as Progress from 'react-native-progress';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import LogoLabel from "../assets/images/logo-label.png"
+import { Nft } from "../types"
 
 interface StringMap { [key: string]: any; }
 
@@ -20,6 +21,15 @@ export const Spacer = (props : {
   ...props.css
 }} />
 
+
+/* IMPLEMENT BUTTON AS FOLLOWS WITH FLEX ROW WRAPPER
+    <View style={{ flex: 1, flexDirection: "row" }}>
+      <ButtonSmall
+        title="Search"
+        icon="search"
+        css={{ backgroundColor: "black" }}
+      />
+    </View> */
 export const ButtonSmall = (props: {
   title?: string,
   icon?: string,
@@ -32,12 +42,15 @@ export const ButtonSmall = (props: {
         style={{ ...styles.smallButton, ...props.css }}
         onPress={props.onClick ? props.onClick : () => {}}
       >
-        <View style={{ ...styles.flexRow, justifyContent: "center" }}>
+        <View style={{ ...styles.flexRow, justifyContent: "center", alignContent: "center" }}>
           {
-            props.icon ? <Icon name={props.icon} size={20} color="rgb(80,80,80)" /> : <View />
+            props.icon ? <Icon name={props.icon} size={16} color="rgb(80,80,80)" /> : <View />
           }
           {
-            props.title ? <Text style={styles.smallButtonText}>{props.title}</Text> : <View />
+            props.icon && props.title ? <Spacer css={{ flex: 0.2 }} /> : <View />
+          }
+          {
+            props.title ? <Text numberOfLines={1} style={styles.smallButtonText}>{props.title}</Text> : <View />
           }
         </View>
       </Pressable>
@@ -72,7 +85,7 @@ export const Header = (props: {
         <ButtonSmall
           icon="search"
           css={{ padding: 5, flex: 1 }}
-          onClick={() => props.navigation.navigate("Home")}
+          onClick={() => props.navigation.navigate("Search")}
         />
         <ButtonSmall
           icon="qrcode"
@@ -107,15 +120,15 @@ export const Footer = (props: {
         />
         <Spacer css={{ flex: 0.1 }} />
         <ButtonSmall
-          icon="qrcode"
+          icon="wallet"
           css={{ padding: 5 }}
-          onClick={() => props.navigation.navigate("Home")}
+          onClick={() => props.navigation.navigate("Wallet")}
         />
         <Spacer css={{ flex: 0.1 }} />
         <ButtonSmall
           icon="search"
           css={{ padding: 5 }}
-          onClick={() => props.navigation.navigate("Home")}
+          onClick={() => props.navigation.navigate("Search")}
         />
         <Spacer css={{ flex: 0.1 }} />
         <ButtonSmall
@@ -180,6 +193,8 @@ export const BannerGradient = (props : {
 
   bOne?: string,                  // buttons
   bTwo?: string,
+  bOneIcon?: string,
+  bTwoIcon?: string,
   bOneOnclick?: () => void,
   bTwoOnclick?: () => void
 }) => {
@@ -208,16 +223,21 @@ export const BannerGradient = (props : {
           <View style={{ ...styles.transparent, flex: 1, alignSelf: "flex-start" }}>
             {
               props.bOne || props.bTwo ? (
-                <View>
-                  <ButtonSmall
-                    title={props.bOne}
-                    onClick={props.bOneOnclick}
-                  />
-                  <Spacer />
-                  <ButtonSmall
-                    title={props.bTwo}
-                    onClick={props.bTwoOnclick}
-                  />
+                <View style={{ flex: 1, backgroundColor: "transparent" }}>
+                  <View style={{ flex: 1, flexDirection: "row", backgroundColor: "transparent" }}>
+                    <ButtonSmall
+                      title={props.bOne ? props.bOne.slice(0,8) : undefined}
+                      onClick={props.bOneOnclick}
+                      icon={props.bOneIcon}
+                    />
+                  </View>
+                  <View style={{ flex: 1, flexDirection: "row", backgroundColor: "transparent" }}>
+                    <ButtonSmall
+                      title={props.bTwo ? props.bTwo.slice(0,8): undefined}
+                      onClick={props.bTwoOnclick}
+                      icon={props.bTwoIcon}
+                    />
+                  </View>
                 </View>
               ) : <View />
             }
@@ -261,44 +281,39 @@ export const ProgressBar = (props: {
   )
 }
 
-interface Card {
-  title: String,
-  subtitle: String,
-  image?: String
-}
+
 export const CardsView = (props: {
-  onPress: () => void,
-  open: boolean
+  navigation: {
+    navigate: (a: string, b:StringMap) => void
+  },
+  items: Array<Nft>,
+  title: string
 }) => {
   return(
     <View style={styles.cards}>
-    <View style={styles.cardsHead}>
-      <Text style={styles.cardsHeadText}>Your Collectables</Text>
-      <Pressable style={styles.cardsHeadMore} onPress={() => {}}>
-        <View style={styles.flexRow}>
-          <Text style={styles.cardsHeadMoreText}>View More</Text>
-        </View>
-      </Pressable>
-    </View>
-    {
-      reshape2D([{title: "Vegan Resto", subtitle: "$1 off NFT"},
-      {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
-      {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
-      {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
-      {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
-      {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"},
-      {title: "Vegan Resto", subtitle: "$1 off NFT", image: "https://i.ibb.co/7b4DSq0/ExpImage.png"}]
-      , 3).map((ele : Array<Card>, idx) => {
-        if (props.open || idx == 0)
-        return (
-        <View style={styles.flexRow}>
+      <View style={styles.cardsHead}>
+        <Text style={styles.cardsHeadText}>{props.title}</Text>
+        <Pressable style={styles.cardsHeadMore} onPress={() => {
+          props.navigation.navigate("Search", { title: props.title, data: props.items })
+          }}>
+          <View style={styles.flexRow}>
+            <Text style={styles.cardsHeadMoreText}>View More</Text>
+          </View>
+        </Pressable>
+      </View>
+      <View style={{ ...styles.flexRow, width: "100%" }}>
         {
-          ele.map((ele : Card) => {
-            if (Object.keys(ele).length == 0) {
-              return <View style={{ ...styles.cardsCard, ...noShadow, backgroundColor: "transparent" }}></View>
-            }
+          (props.items ? props.items.slice(0,3) : [
+            { asset_name: "1", name: "", subtitle: "", image: "" },
+            { asset_name: "2", name: "", subtitle: "", image: "" },
+            { asset_name: "3", name: "", subtitle: "", image: "" },
+          ]).map((ele : Nft) => {
             return (
-              <View style={styles.cardsCard}>
+              <Pressable
+                style={styles.cardsCard}
+                key={ele.asset_name}
+                onPress={() => props.navigation.navigate("nft", { data: ele })}
+              >
                 <View style={{flex: 1, overflow: "hidden", borderRadius: 10 }}>
                   <View style={{flex: 1, overflow: "hidden" }}>
                     <Image
@@ -306,19 +321,64 @@ export const CardsView = (props: {
                       source={ele.image ? {uri:ele.image} : LogoLabel}
                     />
                   </View>
-                  <Text style={styles.cardsCardTitle}>{ele.title}</Text>
-                  <Text style={styles.cardsCardSubtitle}>{ele.subtitle}</Text>
+                  <Text numberOfLines={1} style={styles.cardsCardTitle}>{ele.name}</Text>
+                  <Text numberOfLines={1} style={styles.cardsCardSubtitle}>{ele.subtitle}</Text>
                 </View>
-              </View>
+              </Pressable>
             )
           })
         }
-        </View>
-        )
-      })
-    }
-    
-  </View>
+      </View>
+    </View>
+  )
+}
+
+export const SimpleListElement = (props: {
+  item: Nft,
+}) => {
+  return (
+    <View style={{ ...styles.flexRow, height: 80, padding: 10, backgroundColor: "#eeeeee", borderRadius: 10, overflow: "hidden" }}>
+      <View style={{
+        aspectRatio: 1,
+        borderRadius: 10,
+        overflow: "hidden",
+        justifyContent: "center" }}>
+        <Image
+          style={{ flex: 1, width: "100%", aspectRatio: 1, resizeMode: "cover" }}
+          source={props.item.image ? { uri: props.item.image } : LogoLabel}
+        />
+      </View>
+      <Spacer css={{ flex: 0.05 }} />
+      <View style={{ flex: 1, backgroundColor: "transparent" }}>
+        <Text style={{ fontSize: 20, fontWeight: "600", color: "#111111" }}>{props.item.name}</Text>
+        <Text style={{ fontSize: 16, fontWeight: "400", color: "#666666" }}>{props.item.subtitle}</Text>
+      </View>
+    </View>
+  )
+}
+
+export const SimpleList = (props: {
+  list: Array<Nft>,
+  error: string,
+  title: string
+}) => {
+  return !props.list || props.list.length == 0 ? <Text style={styles.textBar}>{props.error}</Text> : (
+    <View style={{ flex: 1 }}>
+      <Text style={{ fontSize: 25, fontWeight: "600" }}>{props.title}</Text>
+      <Spacer />
+      {
+        props.list.map((ele: Nft, idx: number) => {
+          return (
+            <View key={idx}>
+              <SimpleListElement
+                item={ele}
+              />
+              <Spacer />
+            </View>
+          )
+        })
+      }
+    </View>
   )
 }
 
@@ -333,31 +393,37 @@ const styles = StyleSheet.create({
   transparent: {
     backgroundColor: "transparent"
   },
+  textBar: {
+    textAlign: "center",
+    fontSize: 16,
+    color: "grey",
+    fontWeight: "800"
+  },
 
   // SMALL BUTTON
   smallButton: {
     backgroundColor: "white",
     height: 30,
     borderRadius: 7,
+    overflow: "hidden",
     flex: 1,
     alignSelf: 'flex-start'
   },
   smallButtonText: {
-    flex: 1,
     textAlign: "center",
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "700",
     color: "red"
   },
 
   // ICON INPUT
   IconInput: {
-    ...shadow,
     height: 40,
     padding: 5,
     paddingLeft: 10,
     borderRadius: 5,
-    backgroundColor: "#eeeeee"
+    backgroundColor: "#eeeeee",
+    flex: 1
   },
   input: {
     flex: 1,
@@ -392,15 +458,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bannerProfile: {
-    height: "100%",
     width: "100%",
+    height: "100%",
     resizeMode: "cover",
     flex: 1,
   },
   
   // Cards
   cards: {
-    margin: 10
+    margin: 10,
+    flex: 1
   },
   cardsHead: {
     flex: 1,

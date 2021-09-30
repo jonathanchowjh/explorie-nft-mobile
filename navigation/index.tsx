@@ -16,6 +16,7 @@ import HomeScreen from "../screens/HomeScreen";
 import WalletScreen from "../screens/WalletScreen";
 import MapsScreen from "../screens/MapsScreen";
 import RedeemerScreen from "../screens/RedeemScreen";
+import SearchScreen from "../screens/SearchScreen"
 import Scanner from "../screens/Scanner";
 import InfoScreen from "../screens/Info/InfoScreen";
 import { RootStackParamList } from "../types";
@@ -53,6 +54,11 @@ function RootNavigator() {
       <Stack.Screen
         name="Wallet"
         component={WalletScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Search"
+        component={SearchScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
