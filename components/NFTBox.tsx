@@ -12,42 +12,51 @@ export const NFTBox = ({ nft, navigation }: NFTBoxProps) => {
     <>
       <Text style={styles.title}>{nft.title}</Text>
       <ThemedView style={styles.nftRow}>
-        <Image source={nft.image} style={styles.tinyNft}></Image>
+        <Image
+          source={{ uri: nft.locationImage }}
+          style={styles.tinyNft}
+        ></Image>
         <ThemedView style={styles.nftColumn}>
-          <Text style={styles.nftText}>{nft.title}</Text>
-          <Text style={styles.nftDistance}>{nft.distance}</Text>
+          <Text style={styles.nftText}>{nft.location}</Text>
+          <Text style={styles.nftDistance}>{nft.distance} away</Text>
         </ThemedView>
       </ThemedView>
       <View style={styles.buttonsRow}>
         <Button
           onPress={() => navigation.navigate("Redeem", { ...nft })}
-          title="Redeem"
+          title="Collect"
+          icon="check"
           styles={{
             buttonText: {
               color: "red",
+              fontSize: 18,
               fontWeight: "bold",
+              marginLeft: 5,
             },
             buttonBackground: {
+              flexDirection: "row",
+              justifyContent: "center",
               borderRadius: 10,
               padding: 15,
-              marginRight: 5,
+              marginRight: 10,
               alignItems: "center",
-              flexGrow: 2,
+              flexGrow: 7,
               backgroundColor: "white",
             },
           }}
         ></Button>
         <Button
           onPress={() => console.log("pressed")}
-          title="+"
+          icon="info-circle"
           styles={{
             buttonText: {
               color: "white",
               fontWeight: "bold",
             },
             buttonBackground: {
+              justifyContent: "center",
               borderRadius: 10,
-              padding: 18,
+              padding: 15,
               alignItems: "center",
               flexGrow: 1,
               backgroundColor: "red",
@@ -75,20 +84,24 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     flexDirection: "row",
     justifyContent: "flex-start",
-    marginBottom: 5,
+    marginBottom: 10,
     padding: 10,
   },
   nftText: {
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: "bold",
+    marginBottom: 5,
   },
   tinyNft: {
-    height: 50,
+    borderRadius: 10,
+    height: 60,
     marginRight: 10,
-    width: 50,
+    width: 60,
   },
   title: {
+    fontSize: 20,
     fontWeight: "bold",
-    marginLeft: 10,
+    marginBottom: 15,
+    marginLeft: 5,
   },
 });
