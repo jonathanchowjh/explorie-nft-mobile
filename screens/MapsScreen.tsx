@@ -3,7 +3,7 @@ import MapView, { Marker } from "react-native-maps";
 import { StyleSheet, View, Dimensions } from "react-native";
 import { View as ThemedView, Text } from "../components/Themed";
 import { NFTBox } from "../components/NFTBox";
-import flagPinkImg from "../assets/images/flag-pink.png";
+import flagPinkImg from "../assets/images/pointer.png";
 import oni from "../assets/images/oni.png";
 import kong from "../assets/images/pixilart.png";
 import sutu from "../assets/images/sutu.gif";
@@ -66,7 +66,7 @@ const demoNfts = [
   },
   {
     title: "Sutu Data Healer",
-    location: "Martin-Gropius-Bau @ Mitte",
+    location: "Gropius-Bau @ Mitte",
     locationImage:
       "https://lh5.googleusercontent.com/p/AF1QipPprvlubkbvLCzPVl_YefU4WryX6Jf0LogsvDn9=w408-h271-k-no",
     locationDescription:
@@ -142,10 +142,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#F2F6F9",
     borderRadius: 25,
     margin: 15,
-    paddingBottom: 25,
+    paddingBottom: 15,
     paddingLeft: 15,
     paddingRight: 15,
-    paddingTop: 25,
+    paddingTop: 15,
     width: width - 30,
   },
 });

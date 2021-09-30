@@ -11,7 +11,7 @@ import { Text as DefaultText,
   ScrollView as DefaultScrollView,
   TouchableOpacity
 } from 'react-native';
-
+import { FontAwesome } from "@expo/vector-icons";
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 
@@ -74,8 +74,9 @@ export function TextInput(props: TextInputProps) {
 
   return <DefaultTextInput style={[{ backgroundColor }, style]} {...otherProps} />;
 }
-export const Button = ({ onPress, title, styles }: { onPress: () => void; title: string }) => (
+export const Button = ({ onPress, title, icon, styles }: { onPress: () => void; title?: string; icon?: string }) => (
   <TouchableOpacity onPress={onPress} style={styles.buttonBackground}>
-    <Text style={styles.buttonText}>{title}</Text>
+    {icon && <FontAwesome size={32} name={icon} color={styles.buttonBackground.backgroundColor === "red" ? "white": "red"} />}
+    {title && <Text style={styles.buttonText}>{title}</Text>}
   </TouchableOpacity>
 );
