@@ -40,6 +40,7 @@ const demoNfts = [
       y: 1,
     },
     image: oni,
+    success: true,
   },
   {
     title: "Cyber kongz #0000",
@@ -47,7 +48,7 @@ const demoNfts = [
     locationImage:
       "https://lh5.googleusercontent.com/p/AF1QipMF7ZT-a5V0BIgu3ZvstuLKHj9ZFOlOvQt18Zge=w426-h240-k-no",
     locationDescription:
-      "betahaus | Kreuzberg is our HQ space, and in some ways, our heart and soul. It's a coworking and event space that's been serving the city's startup and freelancer community since 2009. In 2018, we moved into a building at the edge of Kreuzberg with a long legacy of influential tenants. We've restored the space to include modern coworking areas, event spaces, team rooms, balconies, café, and rooftop terrace. As a member, you'll join an international community of 500+ freelancers, entrepreneurs, startups, and corporates. Let's work together!",
+      "betahaus | Kreuzberg is our HQ space, and in some ways, our heart and soul. It's a coworking and event space that's been serving the city's startup and freelancer community since 2009. In 2018, we moved into a building at the edge of Kreuzberg with a long legacy of influential tenants. We've restored the space to include modern coworking areas, event spaces, team rooms, balconies, café, and rooftop terrace.",
     distance: "500 m",
     rating: "2,8 Rating",
     coordinates: {
@@ -63,6 +64,7 @@ const demoNfts = [
       y: 1,
     },
     image: kong,
+    success: false,
   },
   {
     title: "Sutu Data Healer",
@@ -86,6 +88,7 @@ const demoNfts = [
       y: 1,
     },
     image: sutu,
+    success: true,
   },
 ];
 
