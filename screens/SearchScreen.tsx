@@ -40,8 +40,6 @@ export default function SearchScreen({ route, navigation }: RootTabScreenProps<"
     }
   }, [])
   
-
-
   return (
     <View style={{ flex: 1 }}>
       <Header navigation={navigation} />
@@ -68,6 +66,7 @@ export default function SearchScreen({ route, navigation }: RootTabScreenProps<"
           title={header}
           list={list}
           error="Search Here..."
+          navigation={navigation}
         />
         <Spacer />
         <View style={{}}>

@@ -21,6 +21,7 @@ import {
   Spacer,
   ProgressBar,
   CardsView,
+  ButtonSmall
 } from "../components/Elements";
 
 interface Card {
@@ -30,48 +31,63 @@ interface Card {
 }
 
 export default function WalletScreen({
-  navigation,
+  navigation, route
 }: RootTabScreenProps<"Home">) {
-  const [search, onChangeSearch] = React.useState("");
-  const [open, onChangeOpen] = React.useState({
-    vouchers: false,
-    collectables: false,
-  });
+  const [nft, onChangeNft] = React.useState({});
+  React.useEffect(() => {
+    if (!route || !route.params) {
+      return
+    }
+    if (route.params.data) {
+      onChangeNft(route.params.data)
+    }
+  }, [])
 
   return (
     <View style={{ flex: 1 }}>
       <Header navigation={navigation} />
       <ScrollView style={styles.container}>
-        <BannerGradient
-          title="Wallet"
-          subtitle="EXP Balance: 582.34"
-          colorOne="rgba(255,0,0,0.8)"
+        {/* <BannerGradient
+          title="Collectable"
+          subtitle="Your Collectable"
+          colorOne="rgba(0,255,0,0.8)"
           colorTwo="rgba(255,0,0,0.4)"
-          bOne="djnsj2udb2j"
-          bTwo="Settings"
-          bOneIcon="clone"
+          profile="https://i.ibb.co/7b4DSq0/ExpImage.png"
           imageBool={false}
-        />
+        /> */}
         <Spacer />
-        <CardsView
-          items={[
-            { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
-            { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
-            { asset_name: "3", name: "Name Name Name", subtitle: "Sub Subtitle", image: "" }
-          ]}
-          title="My Vouchers"
-
-          navigation={navigation}
-        />
-        <CardsView
-          items={[
-            { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
-            { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
-            { asset_name: "3", name: "Name Name Name", subtitle: "Sub Subtitle", image: "" }
-          ]}
-          title="My Collectables"
-
-          navigation={navigation}
+        <View style={{ flex: 1, flexDirection: "row" }}>
+          <Spacer css={{ flex: 1 }} />
+          <View style={{ flex: 3 }}>
+            <View style={{
+              aspectRatio: 1,
+              borderRadius: 10,
+              overflow: "hidden",
+              justifyContent: "center" }}>
+                <Image
+                  style={{ flex: 1, width: "100%", aspectRatio: 1, resizeMode: "cover" }}
+                  source={{ uri: "https://i.ibb.co/7b4DSq0/ExpImage.png" }}
+                />
+              </View>
+            </View>
+          <Spacer css={{ flex: 1 }} />
+        </View>
+        <Spacer css={{ height: 20 }} />
+        <Text style={{ fontSize: 20, fontWeight: "600" }}>{nft ? nft.name: ""}</Text>
+        <Spacer />
+        <ButtonSmall
+          title="Redeem"
+          css={{ padding: 10, height: 40, backgroundColor: "red" }}
+          cssText={{ color: "black" }}
+          onClick={() => navigation.navigate("Redeem", {
+            title: nft.name,
+            distance: 29,
+            rating: 20,
+            location: 837287,
+            locationImage: "https://i.ibb.co/7b4DSq0/ExpImage.png",
+            locationDescription: "description",
+            image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
+          })}
         />
         <View style={{}}>
           <Button

@@ -35,6 +35,7 @@ export const ButtonSmall = (props: {
   icon?: string,
   onClick?: () => void,
   css?: StringMap
+  cssText?: StringMap
 }) => {
   return (
     props.title || props.icon ? (
@@ -50,7 +51,7 @@ export const ButtonSmall = (props: {
             props.icon && props.title ? <Spacer css={{ flex: 0.2 }} /> : <View />
           }
           {
-            props.title ? <Text numberOfLines={1} style={styles.smallButtonText}>{props.title}</Text> : <View />
+            props.title ? <Text numberOfLines={1} style={{ ...styles.smallButtonText, ...props.cssText }}>{props.title}</Text> : <View />
           }
         </View>
       </Pressable>
@@ -277,7 +278,6 @@ export const ProgressBar = (props: {
       </View>
       <Progress.Bar progress={0.3} width={props.progressWidth} color={props.progressColor} />
     </View>
-    
   )
 }
 
@@ -289,7 +289,7 @@ export const CardsView = (props: {
   items: Array<Nft>,
   title: string
 }) => {
-  return(
+  return (
     <View style={styles.cards}>
       <View style={styles.cardsHead}>
         <Text style={styles.cardsHeadText}>{props.title}</Text>
@@ -312,7 +312,7 @@ export const CardsView = (props: {
               <Pressable
                 style={styles.cardsCard}
                 key={ele.asset_name}
-                onPress={() => props.navigation.navigate("nft", { data: ele })}
+                onPress={() => props.navigation.navigate("NFT", { data: ele })}
               >
                 <View style={{flex: 1, overflow: "hidden", borderRadius: 10 }}>
                   <View style={{flex: 1, overflow: "hidden" }}>
@@ -335,9 +335,13 @@ export const CardsView = (props: {
 
 export const SimpleListElement = (props: {
   item: Nft,
+  onClick: () => void
 }) => {
   return (
-    <View style={{ ...styles.flexRow, height: 80, padding: 10, backgroundColor: "#eeeeee", borderRadius: 10, overflow: "hidden" }}>
+    <Pressable
+      onPress={props.onClick}
+      style={{ ...styles.flexRow, height: 70, padding: 10, backgroundColor: "#eeeeee", borderRadius: 10, overflow: "hidden" }}
+    >
       <View style={{
         aspectRatio: 1,
         borderRadius: 10,
@@ -350,21 +354,43 @@ export const SimpleListElement = (props: {
       </View>
       <Spacer css={{ flex: 0.05 }} />
       <View style={{ flex: 1, backgroundColor: "transparent" }}>
-        <Text style={{ fontSize: 20, fontWeight: "600", color: "#111111" }}>{props.item.name}</Text>
-        <Text style={{ fontSize: 16, fontWeight: "400", color: "#666666" }}>{props.item.subtitle}</Text>
+        <Text style={{ fontSize: 16, fontWeight: "600", color: "#111111" }}>{props.item.name}</Text>
+        <Text style={{ fontSize: 14, fontWeight: "400", color: "#666666" }}>{props.item.subtitle}</Text>
       </View>
-    </View>
+    </Pressable>
   )
 }
 
 export const SimpleList = (props: {
   list: Array<Nft>,
   error: string,
-  title: string
+  title: string,
+  button?: string,
+  buttonFunc?: () => void,
+  navigation?: {
+    navigate: () => void
+  }
 }) => {
   return !props.list || props.list.length == 0 ? <Text style={styles.textBar}>{props.error}</Text> : (
     <View style={{ flex: 1 }}>
-      <Text style={{ fontSize: 25, fontWeight: "600" }}>{props.title}</Text>
+      <View style={styles.flexRow}>
+        <Text numberOfLines={1} style={{ fontSize: 20, fontWeight: "600", width: "50%" }}>{props.title}</Text>
+        <Spacer css={{ flex: 1 }} />
+        {
+          props.button ? (
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <ButtonSmall
+                title={props.button}
+                onClick={props.buttonFunc}
+                css={{ backgroundColor: "#cccccc" }}
+                cssText={{ color: "#333333" }}
+              />
+            </View>
+          ) : <View />
+        }
+        
+      </View>
+      
       <Spacer />
       {
         props.list.map((ele: Nft, idx: number) => {
@@ -372,6 +398,9 @@ export const SimpleList = (props: {
             <View key={idx}>
               <SimpleListElement
                 item={ele}
+                onClick={props.navigation && props.navigation.navigate ? (
+                  () => props.navigation.navigate("NFT", { data: ele })
+                 ) : () => {}}
               />
               <Spacer />
             </View>

@@ -19,7 +19,9 @@ import {
   Spacer,
   ProgressBar,
   CardsView,
+  SimpleList
 } from "../components/Elements";
+import { baseProps } from "react-native-gesture-handler/lib/typescript/handlers/gestureHandlers";
 
 interface Card {
   title: String;
@@ -39,7 +41,7 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
       <Header navigation={navigation} />
       <ScrollView style={styles.container}>
         <BannerGradient
-          title="Welcome, Sam"
+          title="Sam Riley"
           subtitle="Apprentice"
           colorOne="rgba(0,0,0,0)"
           colorTwo="rgba(0,0,0,0)"
@@ -75,35 +77,56 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
           progressWidth={200}
         />
         <Spacer />
-        <CardsView
-          items={[
-            { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
-            { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
-            { asset_name: "3", name: "Name Name Name", subtitle: "Sub Subtitle", image: "" }
-          ]}
+        <SimpleList
           title="Popular NFTs"
-
-          navigation={navigation}
-        />
-        <CardsView
-          items={[
+          list={[
             { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
             { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
-            { asset_name: "3", name: "Name Name Name", subtitle: "Sub Subtitle", image: "" }
           ]}
-          title="Vouchers (< 5km)"
-
+          error="Search Here..."
+          button="View More"
           navigation={navigation}
+          buttonFunc={() => navigation.navigate("Search", {
+            title: "Popular NFTs",
+            data: [
+              { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
+              { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
+            ]
+          })}
         />
-        <CardsView
-          items={[
+        <SimpleList
+          title="Vouchers Near Me"
+          list={[
             { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
             { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
-            { asset_name: "3", name: "Name Name Name", subtitle: "Sub Subtitle", image: "" }
           ]}
-          title="Collectables (< 5km)"
-
+          error="Search Here..."
+          button="View More"
           navigation={navigation}
+          buttonFunc={() => navigation.navigate("Search", {
+            title: "Vouchers Near Me",
+            data: [
+              { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
+              { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
+            ]
+          })}
+        />
+        <SimpleList
+          title="Collectables Near Me"
+          list={[
+            { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
+            { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
+          ]}
+          error="Search Here..."
+          button="View More"
+          navigation={navigation}
+          buttonFunc={() => navigation.navigate("Search", {
+            title: "Collectables Near Me",
+            data: [
+              { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
+              { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
+            ]
+          })}
         />
         <View style={{}}>
           <Button
