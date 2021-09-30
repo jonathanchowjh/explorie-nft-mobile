@@ -42,27 +42,31 @@ export default function RedeemScreen({ route, navigation }) {
             />
           </View>
         </View>
-        <Text style={styles.title}>{title}</Text>
-        <Image style={styles.nftImage} source={image} />
-        <View style={styles.infoButtons}>
-          <View style={styles.distance}>
-            <FontAwesome
-              size={20}
-              name="arrow-down"
-              color="red"
-              style={styles.marginRight}
-            />
-            <Text style={styles.marginRight}>{distance}</Text>
+        <View style={styles.infos}>
+          <View style={styles.texts}>
+            <Text style={styles.title}>{title}</Text>
+            <View style={styles.infoButtons}>
+              <View style={styles.distance}>
+                <FontAwesome
+                  size={20}
+                  name="arrow-down"
+                  color="red"
+                  style={styles.marginRight}
+                />
+                <Text style={styles.marginRight}>{distance}</Text>
+              </View>
+              <View style={styles.rating}>
+                <FontAwesome
+                  size={20}
+                  name="heart"
+                  color="red"
+                  style={styles.marginRight}
+                />
+                <Text style={styles.marginRight}>{rating}</Text>
+              </View>
+            </View>
           </View>
-          <View style={styles.rating}>
-            <FontAwesome
-              size={20}
-              name="heart"
-              color="red"
-              style={styles.marginRight}
-            />
-            <Text style={styles.marginRight}>{rating}</Text>
-          </View>
+          <Image style={styles.nftImage} source={image} />
         </View>
         <Text style={styles.locationDescription}>{locationDescription}</Text>
         <Button
@@ -76,11 +80,16 @@ export default function RedeemScreen({ route, navigation }) {
               width: "auto",
               borderRadius: 10,
               padding: 18,
+              justifyContent: "end",
               alignItems: "center",
               backgroundColor: "red",
             },
           }}
-          onPress={() => navigation.navigate("Scanner", { ...route.params })}
+          onPress={() =>
+            navigation.navigate("Info", {
+              ...route.params,
+            })
+          }
         ></Button>
       </View>
     </View>
@@ -102,10 +111,14 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     marginTop: 5,
   },
+  infos: {
+    flexDirection: "row",
+  },
   locationDescription: {
     fontSize: 13,
     lineHeight: 23,
     marginBottom: 15,
+    marginTop: 15,
   },
   locationText: {
     color: "red",
@@ -125,17 +138,23 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   nftImage: {
-    height: 180,
-    width: 350,
+    borderRadius: 25,
+    flexGrow: 1,
+    maxHeight: 160,
+    maxWidth: 300,
   },
   rating: {
     flexDirection: "row",
   },
+  texts: {
+    flexGrow: 5,
+  },
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    marginBottom: 15,
-    marginTop: 15,
+    lineHeight: 40,
+    textAlign: "left",
+    width: 180,
   },
   tooltip: {
     backgroundColor: "rgba(255, 0, 0, 0.1)",
