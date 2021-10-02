@@ -70,7 +70,7 @@ export default function RedeemScreen({ route, navigation }) {
         </View>
         <Text style={styles.locationDescription}>{locationDescription}</Text>
         <Button
-          title="Redeem"
+          title="Collect"
           styles={{
             buttonText: {
               color: "white",
