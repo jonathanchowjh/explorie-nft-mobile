@@ -30,7 +30,7 @@ export const NFTBox = ({ nft, navigation }: NFTBoxProps) => {
             buttonText: {
               color: "red",
               fontSize: 18,
-              fontWeight: "bold",
+              fontWeight: "500",
               marginLeft: 5,
             },
             buttonBackground: {
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   nftText: {
     fontSize: 15,
-    fontWeight: "bold",
+    fontWeight: "500",
     marginBottom: 5,
   },
   tinyNft: {
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: "500",
     marginBottom: 15,
     marginLeft: 5,
   },
