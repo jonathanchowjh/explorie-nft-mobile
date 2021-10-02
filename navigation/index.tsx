@@ -14,10 +14,10 @@ import { ColorSchemeName } from "react-native";
 
 import HomeScreen from "../screens/HomeScreen";
 import WalletScreen from "../screens/WalletScreen";
-import NFTScreen from "../screens/NFTScreen"
+import NFTScreen from "../screens/NFTScreen";
 import MapsScreen from "../screens/MapsScreen";
 import RedeemerScreen from "../screens/RedeemScreen";
-import SearchScreen from "../screens/SearchScreen"
+import SearchScreen from "../screens/SearchScreen";
 import Scanner from "../screens/Scanner";
 import InfoScreen from "../screens/Info/InfoScreen";
 import { RootStackParamList } from "../types";

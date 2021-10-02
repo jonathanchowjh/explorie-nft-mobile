@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     lineHeight: 23,
     marginBottom: 15,
     marginTop: 15,
+    minHeight: 220,
   },
   locationText: {
     color: "red",
@@ -131,9 +132,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   nftBox: {
-    backgroundColor: "white",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+    flexDirection: "column",
     height: 400,
     padding: 20,
   },
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     flexGrow: 1,
     maxHeight: 160,
-    maxWidth: 300,
+    maxWidth: 190,
   },
   rating: {
     flexDirection: "row",
