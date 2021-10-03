@@ -40,12 +40,12 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
     {
       title: "Vouchers Near Me",
       nfts: [],
-      filter: () => true
+      filter: (ele) => ele.type == "voucher"
     },
     {
       title: "Collectables Near Me",
       nfts: [],
-      filter: () => true
+      filter: (ele) => ele.type == "collectable"
     }
   ]);
 
