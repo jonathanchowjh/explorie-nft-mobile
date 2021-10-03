@@ -9,13 +9,6 @@ interface NFTBoxProps {
 }
 
 export const NFTBox = ({ nft, navigation }: NFTBoxProps) => {
-  // {
-  //   nfts: state.state.nfts.filter((ele: any) => ele.asset_name != action.data.asset_name),
-  //   myNfts: [
-  //     ...state.state.myNfts,
-  //     action.data
-  //   ]
-  // }
   const { context, setContext } = React.useContext(AppContext);
 
   return (

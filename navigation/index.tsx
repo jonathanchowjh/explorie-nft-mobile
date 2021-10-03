@@ -15,9 +15,11 @@ import { ColorSchemeName } from "react-native";
 import HomeScreen from "../screens/HomeScreen";
 import WalletScreen from "../screens/WalletScreen";
 import NFTScreen from "../screens/NFTScreen";
+import MarketplaceScreen from "../screens/MarketplaceScreen";
 import MapsScreen from "../screens/MapsScreen";
 import RedeemerScreen from "../screens/RedeemScreen";
 import SearchScreen from "../screens/SearchScreen";
+import SettingsScreen from "../screens/SettingsScreen";
 import Scanner from "../screens/Scanner";
 import InfoScreen from "../screens/Info/InfoScreen";
 import { RootStackParamList } from "../types";
@@ -85,6 +87,16 @@ function RootNavigator() {
       <Stack.Screen
         name="NFT"
         component={NFTScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Marketplace"
+        component={MarketplaceScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

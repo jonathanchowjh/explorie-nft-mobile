@@ -56,6 +56,60 @@ const initialState = {
       image: defaultNft,
       success: true,
     },
+    {
+      title: "Pop UP by Reggie Watts",
+      subtitle: "sub",
+      asset_name: "6",
+      type: "voucher",
+      location: "Central Park",
+      locationImage:
+        "https://lh5.googleusercontent.com/p/AF1QipNLLJzgpUeIGCzhIVdYiBd6FPEcgP5Z1UM7vwPt=w408-h285-k-no",
+      locationDescription:
+        "Performing this Saturday in Central Park. The person who scores this has a right to purchase my merchendise with 77% discount!",
+      distance: "1.4 Km",
+      rating: "5 Rating",
+      coordinates: {
+        latitude: 40.7747105,
+        longitude: -73.9656321,
+      },
+      centerOffset: {
+        x: -42,
+        y: -60,
+      },
+      anchor: {
+        x: 0.84,
+        y: 1,
+      },
+      image: defaultNft,
+      success: true,
+    },
+    {
+      title: "Exclusive Chef's special",
+      subtitle: "sub",
+      asset_name: "7",
+      type: "voucherRedeemed",
+      location: "La Grande Boucherie",
+      locationImage:
+        "https://lh5.googleusercontent.com/p/AF1QipPOnG7fY9Jd87Nu1Q62J0MX4LSmi_WGZdBVN9bo=w408-h271-k-no",
+      locationDescription:
+        "By collecting this NFT you secure an exclusive chance for a chefs special outside of the menu.",
+      distance: "0.4 Km",
+      rating: "5 Rating",
+      coordinates: {
+        latitude: 40.7647105,
+        longitude: -73.9856321,
+      },
+      centerOffset: {
+        x: -42,
+        y: -60,
+      },
+      anchor: {
+        x: 0.84,
+        y: 1,
+      },
+      image: defaultNft,
+      success: true,
+    },
   ],
   nfts: [
     {

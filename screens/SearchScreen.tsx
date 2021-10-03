@@ -22,12 +22,15 @@ import {
   ButtonSmall,
   SimpleList
 } from "../components/Elements";
+import { AppContext } from "../context/AppContext"
 
 export default function SearchScreen({ route, navigation }: RootTabScreenProps<"Search">) {
   const [search, onChangeSearch] = React.useState("");
   const [status, onChangeStatus] = React.useState("Search here ;)");
-  const [header, onChangeHeader] = React.useState("Title");
+  const [header, onChangeHeader] = React.useState("");
   const [list, onChangeList] = React.useState([]);
+  const { context, setContext } = React.useContext(AppContext);
+
   React.useEffect(() => {
     if (!route || !route.params) {
       return
@@ -54,7 +57,17 @@ export default function SearchScreen({ route, navigation }: RootTabScreenProps<"
         <Spacer css={{ flex: 0.05 }} />
         <IconInput
           value={search}
-          onChangeValue={onChangeSearch}
+          onChangeValue={(e) => {
+            onChangeSearch(e)
+            if (e.length == 0) {
+              onChangeList([])
+              onChangeHeader("")
+            } else {
+              onChangeHeader(`Search: ${e}`)
+              onChangeList(context.nfts.filter((ele) => ele.title.toLowerCase().includes(e.toLowerCase())
+                || ele.subtitle.toLowerCase().includes(e.toLowerCase())))
+            }
+          }}
           iconL="search"
           placeholder="Search"
         />

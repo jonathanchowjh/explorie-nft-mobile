@@ -127,15 +127,15 @@ export const Footer = (props: {
         />
         <Spacer css={{ flex: 0.1 }} />
         <ButtonSmall
-          icon="search"
+          icon="cog"
           css={{ padding: 5 }}
-          onClick={() => props.navigation.navigate("Search")}
+          onClick={() => props.navigation.navigate("Settings")}
         />
         <Spacer css={{ flex: 0.1 }} />
         <ButtonSmall
-          icon="qrcode"
+          icon="store"
           css={{ padding: 5 }}
-          onClick={() => props.navigation.navigate("Home")}
+          onClick={() => props.navigation.navigate("Marketplace")}
         />
     </View>
   )
@@ -374,10 +374,10 @@ export const SimpleList = (props: {
     navigate: () => void
   }
 }) => {
-  return !props.list || props.list.length == 0 ? <Text style={styles.textBar}>{props.error}</Text> : (
+  return (
     <View style={{ flex: 1 }}>
       <View style={styles.flexRow}>
-        <Text numberOfLines={1} style={{ fontSize: 20, fontWeight: "600", width: "50%" }}>{props.title ? props.title : "Title"}</Text>
+        <Text numberOfLines={1} style={{ fontSize: 20, fontWeight: "600", width: "50%" }}>{props.title ? props.title : ""}</Text>
         <Spacer css={{ flex: 1 }} />
         {
           props.button ? (
@@ -396,19 +396,21 @@ export const SimpleList = (props: {
       
       <Spacer />
       {
-        props.list.map((ele: Nft, idx: number) => {
-          return (
-            <View key={idx}>
-              <SimpleListElement
-                item={ele}
-                onClick={props.listFunc ? (
-                  () => props.listFunc({ data: ele })
-                 ) : () => {}}
-              />
-              <Spacer />
-            </View>
-          )
-        })
+        !props.list || props.list.length == 0 ? <Text style={styles.textBar}>{props.error}</Text> : (
+          props.list.map((ele: Nft, idx: number) => {
+            return (
+              <View key={idx}>
+                <SimpleListElement
+                  item={ele}
+                  onClick={props.listFunc ? (
+                    () => props.listFunc({ data: ele })
+                  ) : () => {}}
+                />
+                <Spacer />
+              </View>
+            )
+          })
+        )
       }
     </View>
   )

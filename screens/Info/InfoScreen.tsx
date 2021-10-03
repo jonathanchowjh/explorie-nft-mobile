@@ -6,8 +6,7 @@ import successIcon from "../../assets/images/successIcon.png";
 import errorIcon from "../../assets/images/errorIcon.png";
 
 export default function InfoScreen({ route, navigation }) {
-  const { title, image, success } = route.params;
-
+  const { title, image, success, message } = route.params;
   useEffect(() => {
     setTimeout(() => {
       navigation.navigate("Home");
@@ -20,9 +19,12 @@ export default function InfoScreen({ route, navigation }) {
         <Image source={success ? successIcon : errorIcon}></Image>
         <Text style={styles.title}>{success ? "Congrats!" : "Woopsy!"}</Text>
         <Text style={styles.message}>
-          {success
-            ? `You redeemed the NFT: ${title}!`
-            : "In order to redeem this NFT you have to be in the correct location"}
+          {
+            message ? message :
+            success
+              ? `You redeemed the NFT: ${title}!`
+              : "In order to redeem this NFT you have to be in the correct location"
+          }
         </Text>
         {success && <Image style={styles.nftImage} source={image}></Image>}
       </View>

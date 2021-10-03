@@ -9,9 +9,7 @@ import {
   Pressable,
 } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
-import { shadow, noShadow } from "../constants/Styles";
-import { reshape2D } from "../constants/Functions";
-import AdaptiveIcon from "../assets/images/adaptive-icon.png";
+import { shadow } from "../constants/Styles";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {
   Header,
@@ -21,8 +19,8 @@ import {
   Spacer,
   ProgressBar,
   CardsView,
+  SimpleList
 } from "../components/Elements";
-
 import { AppContext } from "../context/AppContext"
 
 interface Card {
@@ -31,66 +29,56 @@ interface Card {
   image?: String;
 }
 
-export default function WalletScreen({
-  navigation,
-}: RootTabScreenProps<"Home">) {
+export default function MarketplaceScreen({ navigation }: RootTabScreenProps<"Home">) {
   const { context, setContext } = React.useContext(AppContext);
-  const [wallet, onChangeWallet] = React.useState([
+  const [home, onChangeHome] = React.useState([
     {
-      title: "My Vouchers",
+      title: "Popular NFTs",
       nfts: [],
-      filter: ele => ele.type == "voucher" || ele.type == "voucherRedeemed"
+      filter: () => true
     },
     {
-      title: "My Collectables",
+      title: "Vouchers Near Me",
       nfts: [],
-      filter: ele => ele.type == "collectable"
+      filter: () => true
+    },
+    {
+      title: "Collectables Near Me",
+      nfts: [],
+      filter: () => true
     }
   ]);
 
   React.useEffect(() => {
-    if (!context || !context.myNfts) return
-    onChangeWallet(wallet.map((ele) => {
+    if (!context || !context.nfts) return
+    onChangeHome(home.map((ele) => {
       return {
         ...ele,
-        nfts: context.myNfts.filter(ele.filter)
+        nfts: context.nfts.filter(ele.filter)
       }
     }))
   }, [context])
-
   return (
     <View style={{ flex: 1 }}>
       <Header navigation={navigation} />
       <ScrollView style={styles.container}>
         <BannerGradient
-          title="Wallet"
-          subtitle="EXP Balance: 582.34"
-          colorOne="rgba(255,0,0,0.8)"
-          colorTwo="rgba(255,0,0,0.4)"
-          bOne="djnsj2udb2j"
-          bTwo="Settings"
-          bOneIcon="clone"
+          title="Marketplace"
+          subtitle="Buy and Sell your collectables"
+          colorOne="rgba(0,200,0,0.8)"
+          colorTwo="rgba(0,0,0,0.4)"
+          profile="https://i.ibb.co/7b4DSq0/ExpImage.png"
+          cssTitle={{ color: "black" }}
+          cssSubtitle={{ color: "white" }}
           imageBool={false}
         />
         <Spacer />
-        {
-          wallet ? wallet.map((ele, num) => {
-            return (
-              <CardsView
-                key={num}
-                items={ele.nfts}
-                title={ele.title}
-                navigation={navigation}
-              />
-            )
-          }) : <View />
-        }
-        <View style={{}}>
-          <Button
-            title="Next"
-            onPress={() => navigation.navigate("ExploryMap")}
-          ></Button>
-        </View>
+        <Text style={{
+          textAlign: "center",
+          fontSize: 16,
+          color: "grey",
+          fontWeight: "800"
+        }}>Under Development</Text>
       </ScrollView>
       <Footer navigation={navigation} />
     </View>

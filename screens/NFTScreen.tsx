@@ -1,5 +1,6 @@
 import * as React from "react";
 import { StyleSheet, Button, Image } from "react-native";
+import Clipboard from '@react-native-community/clipboard';
 import { LinearGradient } from "expo-linear-gradient";
 import {
   View,
@@ -13,6 +14,7 @@ import { shadow, noShadow } from "../constants/Styles";
 import { reshape2D } from "../constants/Functions";
 import AdaptiveIcon from "../assets/images/adaptive-icon.png";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { AppContext } from "../context/AppContext"
 import {
   Header,
   Footer,
@@ -30,10 +32,12 @@ interface Card {
   image?: String;
 }
 
-export default function WalletScreen({
+export default function NFTScreen({
   navigation, route
 }: RootTabScreenProps<"Home">) {
+  const { context, setContext } = React.useContext(AppContext);
   const [nft, onChangeNft] = React.useState({});
+  const [open, onChangeOpen] = React.useState({ qr: false })
   React.useEffect(() => {
     if (!route || !route.params) {
       return
@@ -73,14 +77,93 @@ export default function WalletScreen({
           <Spacer css={{ flex: 1 }} />
         </View>
         <Spacer css={{ height: 20 }} />
-        <Text style={{ fontSize: 20, fontWeight: "600" }}>{nft ? nft.name : ""}</Text>
+        <Text style={{ fontSize: 20, fontWeight: "600" }}>{nft ? nft.title : ""}</Text>
+        <Text style={{ fontSize: 16, fontWeight: "500" }}>{nft ? nft.subtitle : ""}</Text>
         <Spacer />
-        <ButtonSmall
-          title="Redeem"
-          css={{ padding: 10, height: 40, backgroundColor: "red" }}
-          cssText={{ color: "black" }}
-          onClick={() => navigation.navigate("Info", { nft })}
-        />
+        {
+          nft && nft.type == "voucher" ? (
+            <ButtonSmall
+              title="Redeem"
+              css={{ padding: 10, height: 40, backgroundColor: "#ff4444" }}
+              cssText={{ color: "white" }}
+              onClick={() => {
+                setContext({
+                  ...context,
+                  myNfts: [
+                    ...context.myNfts.filter((ele) => ele.asset_name != nft.asset_name),
+                    {
+                      ...nft,
+                      type: "voucherRedeemed"
+                    }
+                  ]
+                })
+                navigation.navigate("Info", { ...nft, message: "Voucher Redeemed!" })
+              }}
+            />
+            ) : (
+              nft.type == "voucherRedeemed" ? (
+                <View>
+                  <ButtonSmall
+                    title="Redeemed"
+                    css={{ padding: 10, height: 40, backgroundColor: "#aaaaaa" }}
+                    cssText={{ color: "black" }}
+                    onClick={() => {}}
+                  />
+                  <Spacer />
+                  <View style={{ flexDirection: "row" }}>
+                    <ButtonSmall
+                      title="Code: #jdndn"
+                      icon="copy"
+                      css={{ padding: 10, height: 40, backgroundColor: "#9bcdd4" }}
+                      cssText={{ color: "black", fontSize: 12 }}
+                      // onClick={async () => await Clipboard.setString("#jdndn")}
+                      onClick={() => {}}
+                    />
+                    <Spacer css={{ flex: 0.1 }} />
+                    <ButtonSmall
+                      title="View QR Code"
+                      icon="qrcode"
+                      css={{ padding: 10, height: 40, backgroundColor: "#9bcdd4" }}
+                      cssText={{ color: "black", fontSize: 12 }}
+                      onClick={() => onChangeOpen({ ...open, qr: !open.qr })}
+                    />
+                    <Spacer css={{ flex: 0.5 }} />
+                  </View>
+                </View>
+                
+              ) : (
+                <ButtonSmall
+                  title="Marketplace"
+                  css={{ padding: 10, height: 40, backgroundColor: "red" }}
+                  cssText={{ color: "black" }}
+                  onClick={() => navigation.navigate("Marketplace", { ...nft })}
+                />
+              )
+            )
+            
+        }
+        <Spacer />
+        <Text style={{ fontSize: 14, fontWeight: "300" }}>{nft ? nft.locationDescription : ""}</Text>
+        {
+          open && open.qr ? (
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <Spacer css={{ flex: 1 }} />
+              <View style={{ flex: 3 }}>
+                <View style={{
+                  aspectRatio: 1,
+                  borderRadius: 10,
+                  overflow: "hidden",
+                  justifyContent: "center" }}>
+                    <Image
+                      style={{ flex: 1, width: "100%", aspectRatio: 1, resizeMode: "cover" }}
+                      source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png" }}
+                    />
+                  </View>
+                </View>
+              <Spacer css={{ flex: 1 }} />
+            </View>
+          ) : <View />
+        }
         <View style={{}}>
           <Button
             title="Next"
