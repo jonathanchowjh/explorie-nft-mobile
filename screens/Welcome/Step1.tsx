@@ -11,12 +11,6 @@ export default function FirstStepScreen({
     <View style={styles.container}>
       <Image source={logo}></Image>
       <Text style={styles.subtitle}>Explore the world, one NFT at a time</Text>
-      <View style={styles.footer}>
-        <Button
-          title="Next"
-          onPress={() => navigation.navigate("Home")}
-        ></Button>
-      </View>
     </View>
   );
 }

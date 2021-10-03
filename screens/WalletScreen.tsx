@@ -85,12 +85,6 @@ export default function WalletScreen({
             )
           }) : <View />
         }
-        <View style={{}}>
-          <Button
-            title="Next"
-            onPress={() => navigation.navigate("ExploryMap")}
-          ></Button>
-        </View>
       </ScrollView>
       <Footer navigation={navigation} />
     </View>

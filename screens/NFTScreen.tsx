@@ -70,7 +70,10 @@ export default function NFTScreen({
               justifyContent: "center" }}>
                 <Image
                   style={{ flex: 1, width: "100%", aspectRatio: 1, resizeMode: "cover" }}
-                  source={{ uri: "https://i.ibb.co/7b4DSq0/ExpImage.png" }}
+                  source={(nft && nft.image) ?
+                    (nft.image instanceof String ? { uri: nft.image } : nft.image) :
+                    "https://i.ibb.co/7b4DSq0/ExpImage.png"
+                  }
                 />
               </View>
             </View>
@@ -164,12 +167,6 @@ export default function NFTScreen({
             </View>
           ) : <View />
         }
-        <View style={{}}>
-          <Button
-            title="Next"
-            onPress={() => navigation.navigate("ExploryMap")}
-          ></Button>
-        </View>
       </ScrollView>
       <Footer navigation={navigation} />
     </View>

@@ -120,12 +120,6 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
             )
           }) : <View />
         }
-        <View style={{}}>
-          <Button
-            title="Next"
-            onPress={() => navigation.navigate("Wallet")}
-          ></Button>
-        </View>
       </ScrollView>
       <Footer navigation={navigation} />
     </View>

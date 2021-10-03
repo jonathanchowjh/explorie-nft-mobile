@@ -22,10 +22,6 @@ export default function LoginScreen({
         value={number}
         placeholder="Password"
       />
-      <Button
-        title="Next"
-        onPress={() => navigation.navigate("ExploryMap")}
-      ></Button>
     </SafeAreaView>
   );
 }

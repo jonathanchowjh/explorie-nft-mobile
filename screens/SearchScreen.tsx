@@ -83,12 +83,6 @@ export default function SearchScreen({ route, navigation }: RootTabScreenProps<"
           navigation={navigation}
         />
         <Spacer />
-        <View style={{}}>
-          <Button
-            title="Next"
-            onPress={() => navigation.navigate("Wallet")}
-          ></Button>
-        </View>
       </ScrollView>
       <Footer navigation={navigation} />
     </View>
