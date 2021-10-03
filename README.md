@@ -10,10 +10,12 @@ Explorie’s mission is to be an NFT platform with real-life utilities. It seeks
 ```
 git clone https://github.com/Explory/explory-app.git
 // install node https://nodejs.org/en/download/
+// Ios, install xcode simulator
+// Andriod, install android studio emulator
 
 npm i
 npm i -g expo
 
-npm run ios           // Ios, install xcode simulator
-npm run android       // Andriod, install android studio emulator
+npm run ios         // for ios
+npm run android     // for andriod
 ```
