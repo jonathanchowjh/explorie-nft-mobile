@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { StyleSheet, View, Dimensions } from "react-native";
 import { View as ThemedView } from "../components/Themed";
-import { useAppContext } from "../context/AppContext";
+import { AppContext } from "../context/AppContext";
 import { NFTBox } from "../components/NFTBox";
 import pointer from "../assets/images/pointer.png";
 
@@ -25,8 +25,8 @@ const indexOfFunc = (arr: any, func: (a: any) => Boolean) => {
 
 export default function MapsScreen({ navigation, route }) {
   const [activeNft, setActiveNft] = useState(2);
-  const { state } = useAppContext(); // HALP ME HERE!
-  const { nfts } = state;
+  const { context, setContext } = React.useContext(AppContext);
+  const { nfts } = context
 
   React.useEffect(() => {
     if (!route || !route.params) {

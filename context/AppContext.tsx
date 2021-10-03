@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import oni from "../assets/images/oni.png";
 import kong from "../assets/images/pixilart.png";
 import defaultNft from "../assets/images/default.png";
@@ -19,13 +19,13 @@ export const useAppContext = () => {
   if (!context) {
     throw new Error(`useAppContext must be used withn a AppProvider`);
   }
-
   return context;
 };
 
 export const AppProvider = ({ children }: AppProviderProps) => {
+  const [context, setContext] = useState(initialState)
   return (
-    <AppContext.Provider value={{ state: initialState }}>
+    <AppContext.Provider value={{ context, setContext }}>
       {children}
     </AppContext.Provider>
   );
@@ -302,6 +302,25 @@ const initialState = {
       coordinates: {
         latitude: 40.7413747,
         longitude: -73.9877613,
+      },
+      image: defaultNft,
+      success: true,
+    },
+    {
+      title: "Etherials meetup @ NFT.NYC",
+      subtitle: "sub",
+      asset_name: "11",
+      type: "collectable",
+      location: "Times square",
+      locationImage:
+        "https://lh5.googleusercontent.com/p/AF1QipNtmaLbgLaTzv0ubPOdDKqsC3fmFFDwRbckH-oZ=w300-h225-p-k-no",
+      locationDescription:
+        "The community of Etherials is coming to NFT.NYC. Participate, come and collect this limited editon NFT!",
+      distance: "0.2 Km",
+      rating: "5 Rating",
+      coordinates: {
+        latitude: 40.7413747,
+        longitude: -73.9817613,
       },
       image: defaultNft,
       success: true,

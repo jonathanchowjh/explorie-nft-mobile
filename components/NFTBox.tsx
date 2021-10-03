@@ -16,11 +16,11 @@ export const NFTBox = ({ nft, navigation }: NFTBoxProps) => {
   //     action.data
   //   ]
   // }
-  const CONTEXT = React.useContext(AppContext);
+  const { context, setContext } = React.useContext(AppContext);
 
   return (
     <>
-      <Text style={styles.title}>{nft.title}</Text>
+      <Text style={styles.title}>{nft.title ? nft.title : "Title"}</Text>
       <ThemedView style={styles.nftRow}>
         <Image
           source={{ uri: nft.locationImage }}
@@ -34,14 +34,16 @@ export const NFTBox = ({ nft, navigation }: NFTBoxProps) => {
       <View style={styles.buttonsRow}>
         <Button
           onPress={() => {
-            // setContext({
-            //   ...CONTEXT,
-            //   nfts: CONTEXT.state.nfts.filter((ele: any) => ele.asset_name != nft.asset_name),
-            //   myNfts: [
-            //     ...CONTEXT.state.myNfts,
-            //     nft
-            //   ]
-            // })
+            if (nft.success) {
+              setContext({
+                ...context,
+                // nfts: context.nfts.filter((ele: any) => ele.asset_name != nft.asset_name),
+                myNfts: [
+                  ...context.myNfts,
+                  nft
+                ]
+              })
+            }
             navigation.navigate("Redeem", { ...nft })
           }}
           title="Collect"

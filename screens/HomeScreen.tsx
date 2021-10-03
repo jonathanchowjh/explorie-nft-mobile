@@ -30,7 +30,7 @@ interface Card {
 }
 
 export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
-  const CONTEXT = React.useContext(AppContext);
+  const { context, setContext } = React.useContext(AppContext);
   const [home, onChangeHome] = React.useState([
     {
       title: "Popular NFTs",
@@ -50,14 +50,14 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
   ]);
 
   React.useEffect(() => {
-    if (!CONTEXT || !CONTEXT.state || !CONTEXT.state.nfts) return
+    if (!context || !context.nfts) return
     onChangeHome(home.map((ele) => {
       return {
         ...ele,
-        nfts: CONTEXT.state.nfts.filter(ele.filter)
+        nfts: context.nfts.filter(ele.filter)
       }
     }))
-  }, [CONTEXT])
+  }, [context])
   return (
     <View style={{ flex: 1 }}>
       <Header navigation={navigation} />

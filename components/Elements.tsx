@@ -303,7 +303,9 @@ export const CardsView = (props: {
       </View>
       <View style={{ ...styles.flexRow, width: "100%" }}>
         {
-          (props.items ? props.items.slice(0,3) : []).map((ele : Nft) => {
+          !props.items || props.items.length == 0 ? (
+            <Text style={styles.textBar}>Nothing Here</Text>
+          ) : props.items.slice(0,3).map((ele : Nft) => {
             return (
               <Pressable
                 style={styles.cardsCard}
@@ -354,8 +356,8 @@ export const SimpleListElement = (props: {
       </View>
       <Spacer css={{ flex: 0.05 }} />
       <View style={{ flex: 1, backgroundColor: "transparent" }}>
-        <Text style={{ fontSize: 16, fontWeight: "600", color: "#111111" }}>{props.item.title}</Text>
-        <Text style={{ fontSize: 14, fontWeight: "400", color: "#666666" }}>{props.item.subtitle}</Text>
+        <Text style={{ fontSize: 16, fontWeight: "600", color: "#111111" }}>{props.item.title ? props.item.title : "Title"}</Text>
+        <Text style={{ fontSize: 14, fontWeight: "400", color: "#666666" }}>{props.item.subtitle ? props.item.subtitle : "Subtitle"}</Text>
       </View>
     </Pressable>
   )
@@ -375,7 +377,7 @@ export const SimpleList = (props: {
   return !props.list || props.list.length == 0 ? <Text style={styles.textBar}>{props.error}</Text> : (
     <View style={{ flex: 1 }}>
       <View style={styles.flexRow}>
-        <Text numberOfLines={1} style={{ fontSize: 20, fontWeight: "600", width: "50%" }}>{props.title}</Text>
+        <Text numberOfLines={1} style={{ fontSize: 20, fontWeight: "600", width: "50%" }}>{props.title ? props.title : "Title"}</Text>
         <Spacer css={{ flex: 1 }} />
         {
           props.button ? (

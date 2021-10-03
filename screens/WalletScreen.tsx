@@ -34,29 +34,29 @@ interface Card {
 export default function WalletScreen({
   navigation,
 }: RootTabScreenProps<"Home">) {
-  const CONTEXT = React.useContext(AppContext);
+  const { context, setContext } = React.useContext(AppContext);
   const [wallet, onChangeWallet] = React.useState([
     {
       title: "My Vouchers",
       nfts: [],
-      filter: () => true
+      filter: ele => ele.type == "voucher"
     },
     {
       title: "My Collectables",
       nfts: [],
-      filter: () => true
+      filter: ele => ele.type == "collectable"
     }
   ]);
 
   React.useEffect(() => {
-    if (!CONTEXT || !CONTEXT.state || !CONTEXT.state.myNfts) return
+    if (!context || !context.myNfts) return
     onChangeWallet(wallet.map((ele) => {
       return {
         ...ele,
-        nfts: CONTEXT.state.myNfts.filter(ele.filter)
+        nfts: context.myNfts.filter(ele.filter)
       }
     }))
-  }, [CONTEXT])
+  }, [context])
 
   return (
     <View style={{ flex: 1 }}>
