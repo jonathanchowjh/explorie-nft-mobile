@@ -21,7 +21,7 @@ import {
   CardsView,
   SimpleList
 } from "../components/Elements";
-import { baseProps } from "react-native-gesture-handler/lib/typescript/handlers/gestureHandlers";
+import { AppContext } from "../context/AppContext"
 
 interface Card {
   title: String;
@@ -30,12 +30,34 @@ interface Card {
 }
 
 export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
-  const [search, onChangeSearch] = React.useState("");
-  const [open, onChangeOpen] = React.useState({
-    vouchers: false,
-    collectables: false,
-  });
+  const CONTEXT = React.useContext(AppContext);
+  const [home, onChangeHome] = React.useState([
+    {
+      title: "Popular NFTs",
+      nfts: [],
+      filter: () => true
+    },
+    {
+      title: "Vouchers Near Me",
+      nfts: [],
+      filter: () => true
+    },
+    {
+      title: "Collectables Near Me",
+      nfts: [],
+      filter: () => true
+    }
+  ]);
 
+  React.useEffect(() => {
+    if (!CONTEXT || !CONTEXT.state || !CONTEXT.state.nfts) return
+    onChangeHome(home.map((ele) => {
+      return {
+        ...ele,
+        nfts: CONTEXT.state.nfts.filter(ele.filter)
+      }
+    }))
+  }, [CONTEXT])
   return (
     <View style={{ flex: 1 }}>
       <Header navigation={navigation} />
@@ -77,57 +99,27 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
           progressWidth={200}
         />
         <Spacer />
-        <SimpleList
-          title="Popular NFTs"
-          list={[
-            { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
-            { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
-          ]}
-          error="Search Here..."
-          button="View More"
-          navigation={navigation}
-          buttonFunc={() => navigation.navigate("Search", {
-            title: "Popular NFTs",
-            data: [
-              { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
-              { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
-            ]
-          })}
-        />
-        <SimpleList
-          title="Vouchers Near Me"
-          list={[
-            { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
-            { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
-          ]}
-          error="Search Here..."
-          button="View More"
-          navigation={navigation}
-          buttonFunc={() => navigation.navigate("Search", {
-            title: "Vouchers Near Me",
-            data: [
-              { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
-              { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
-            ]
-          })}
-        />
-        <SimpleList
-          title="Collectables Near Me"
-          list={[
-            { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
-            { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
-          ]}
-          error="Search Here..."
-          button="View More"
-          navigation={navigation}
-          buttonFunc={() => navigation.navigate("Search", {
-            title: "Collectables Near Me",
-            data: [
-              { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
-              { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
-            ]
-          })}
-        />
+        {
+          home ? home.map((ele, num) => {
+            return (
+              <SimpleList
+                key={num}
+                navigation={navigation}
+
+                title={ele.title}
+                list={ele.nfts.slice(0,2)}
+                listFunc={(data) => navigation.navigate("ExploryMap", data)}
+                error="Search Here..."
+                
+                button="View More"
+                buttonFunc={() => navigation.navigate("Search", {
+                  title: ele.title,
+                  data: ele.nfts
+                })}
+              />
+            )
+          }) : <View />
+        }
         <View style={{}}>
           <Button
             title="Next"

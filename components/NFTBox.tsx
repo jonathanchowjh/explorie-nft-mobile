@@ -1,6 +1,7 @@
 import * as React from "react";
 import { View as ThemedView, Text, Button } from "./Themed";
 import { StyleSheet, View, Image } from "react-native";
+import { AppContext } from "../context/AppContext"
 
 interface NFTBoxProps {
   nft: any;
@@ -8,6 +9,15 @@ interface NFTBoxProps {
 }
 
 export const NFTBox = ({ nft, navigation }: NFTBoxProps) => {
+  // {
+  //   nfts: state.state.nfts.filter((ele: any) => ele.asset_name != action.data.asset_name),
+  //   myNfts: [
+  //     ...state.state.myNfts,
+  //     action.data
+  //   ]
+  // }
+  const CONTEXT = React.useContext(AppContext);
+
   return (
     <>
       <Text style={styles.title}>{nft.title}</Text>
@@ -23,7 +33,17 @@ export const NFTBox = ({ nft, navigation }: NFTBoxProps) => {
       </ThemedView>
       <View style={styles.buttonsRow}>
         <Button
-          onPress={() => navigation.navigate("Redeem", { ...nft })}
+          onPress={() => {
+            // setContext({
+            //   ...CONTEXT,
+            //   nfts: CONTEXT.state.nfts.filter((ele: any) => ele.asset_name != nft.asset_name),
+            //   myNfts: [
+            //     ...CONTEXT.state.myNfts,
+            //     nft
+            //   ]
+            // })
+            navigation.navigate("Redeem", { ...nft })
+          }}
           title="Collect"
           icon="check"
           styles={{

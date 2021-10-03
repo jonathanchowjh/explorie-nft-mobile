@@ -73,21 +73,13 @@ export default function WalletScreen({
           <Spacer css={{ flex: 1 }} />
         </View>
         <Spacer css={{ height: 20 }} />
-        <Text style={{ fontSize: 20, fontWeight: "600" }}>{nft ? nft.name: ""}</Text>
+        <Text style={{ fontSize: 20, fontWeight: "600" }}>{nft ? nft.name : ""}</Text>
         <Spacer />
         <ButtonSmall
           title="Redeem"
           css={{ padding: 10, height: 40, backgroundColor: "red" }}
           cssText={{ color: "black" }}
-          onClick={() => navigation.navigate("Redeem", {
-            title: nft.name,
-            distance: 29,
-            rating: 20,
-            location: 837287,
-            locationImage: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-            locationDescription: "description",
-            image: "https://i.ibb.co/7b4DSq0/ExpImage.png",
-          })}
+          onClick={() => navigation.navigate("Info", { nft })}
         />
         <View style={{}}>
           <Button

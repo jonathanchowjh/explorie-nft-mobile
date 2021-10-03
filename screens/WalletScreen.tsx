@@ -23,6 +23,8 @@ import {
   CardsView,
 } from "../components/Elements";
 
+import { AppContext } from "../context/AppContext"
+
 interface Card {
   title: String;
   subtitle: String;
@@ -32,11 +34,29 @@ interface Card {
 export default function WalletScreen({
   navigation,
 }: RootTabScreenProps<"Home">) {
-  const [search, onChangeSearch] = React.useState("");
-  const [open, onChangeOpen] = React.useState({
-    vouchers: false,
-    collectables: false,
-  });
+  const CONTEXT = React.useContext(AppContext);
+  const [wallet, onChangeWallet] = React.useState([
+    {
+      title: "My Vouchers",
+      nfts: [],
+      filter: () => true
+    },
+    {
+      title: "My Collectables",
+      nfts: [],
+      filter: () => true
+    }
+  ]);
+
+  React.useEffect(() => {
+    if (!CONTEXT || !CONTEXT.state || !CONTEXT.state.myNfts) return
+    onChangeWallet(wallet.map((ele) => {
+      return {
+        ...ele,
+        nfts: CONTEXT.state.myNfts.filter(ele.filter)
+      }
+    }))
+  }, [CONTEXT])
 
   return (
     <View style={{ flex: 1 }}>
@@ -53,26 +73,18 @@ export default function WalletScreen({
           imageBool={false}
         />
         <Spacer />
-        <CardsView
-          items={[
-            { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
-            { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
-            { asset_name: "3", name: "Name Name Name", subtitle: "Sub Subtitle", image: "" }
-          ]}
-          title="My Vouchers"
-
-          navigation={navigation}
-        />
-        <CardsView
-          items={[
-            { asset_name: "1", name: "Name", subtitle: "sub", image: "" },
-            { asset_name: "2", name: "Name Name", subtitle: "Sub sub", image: "" },
-            { asset_name: "3", name: "Name Name Name", subtitle: "Sub Subtitle", image: "" }
-          ]}
-          title="My Collectables"
-
-          navigation={navigation}
-        />
+        {
+          wallet ? wallet.map((ele, num) => {
+            return (
+              <CardsView
+                key={num}
+                items={ele.nfts}
+                title={ele.title}
+                navigation={navigation}
+              />
+            )
+          }) : <View />
+        }
         <View style={{}}>
           <Button
             title="Next"

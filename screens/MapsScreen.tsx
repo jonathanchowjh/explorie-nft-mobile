@@ -14,10 +14,28 @@ const LONGITUDE = -73.9930029;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-export default function MapsScreen({ navigation }) {
+const indexOfFunc = (arr: any, func: (a: any) => Boolean) => {
+  for (let i = 0; i < arr.length; i++) {
+    if (func(arr[i])) {
+      return i
+    }
+  }
+  return 0
+}
+
+export default function MapsScreen({ navigation, route }) {
   const [activeNft, setActiveNft] = useState(2);
   const { state } = useAppContext(); // HALP ME HERE!
   const { nfts } = state;
+
+  React.useEffect(() => {
+    if (!route || !route.params) {
+      return
+    }
+    if (route.params.data) {
+      setActiveNft(indexOfFunc(nfts, (ele: any) => ele.asset_name == route.params.data.asset_name))
+    }
+  }, [])
 
   return (
     <View style={styles.container}>

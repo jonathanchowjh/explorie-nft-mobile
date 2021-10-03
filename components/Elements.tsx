@@ -303,11 +303,7 @@ export const CardsView = (props: {
       </View>
       <View style={{ ...styles.flexRow, width: "100%" }}>
         {
-          (props.items ? props.items.slice(0,3) : [
-            { asset_name: "1", name: "", subtitle: "", image: "" },
-            { asset_name: "2", name: "", subtitle: "", image: "" },
-            { asset_name: "3", name: "", subtitle: "", image: "" },
-          ]).map((ele : Nft) => {
+          (props.items ? props.items.slice(0,3) : []).map((ele : Nft) => {
             return (
               <Pressable
                 style={styles.cardsCard}
@@ -318,10 +314,12 @@ export const CardsView = (props: {
                   <View style={{flex: 1, overflow: "hidden" }}>
                     <Image
                       style={styles.cardsCardImg}
-                      source={ele.image ? {uri:ele.image} : LogoLabel}
+                      source={ele.image ? (
+                        (ele.image instanceof String) ? { uri: ele.image } : ele.image
+                      ): LogoLabel}
                     />
                   </View>
-                  <Text numberOfLines={1} style={styles.cardsCardTitle}>{ele.name}</Text>
+                  <Text numberOfLines={1} style={styles.cardsCardTitle}>{ele.title}</Text>
                   <Text numberOfLines={1} style={styles.cardsCardSubtitle}>{ele.subtitle}</Text>
                 </View>
               </Pressable>
@@ -349,12 +347,14 @@ export const SimpleListElement = (props: {
         justifyContent: "center" }}>
         <Image
           style={{ flex: 1, width: "100%", aspectRatio: 1, resizeMode: "cover" }}
-          source={props.item.image ? { uri: props.item.image } : LogoLabel}
+          source={props.item.image ? (
+            (props.item.image instanceof String) ? { uri: props.item.image } : props.item.image
+          ): LogoLabel}
         />
       </View>
       <Spacer css={{ flex: 0.05 }} />
       <View style={{ flex: 1, backgroundColor: "transparent" }}>
-        <Text style={{ fontSize: 16, fontWeight: "600", color: "#111111" }}>{props.item.name}</Text>
+        <Text style={{ fontSize: 16, fontWeight: "600", color: "#111111" }}>{props.item.title}</Text>
         <Text style={{ fontSize: 14, fontWeight: "400", color: "#666666" }}>{props.item.subtitle}</Text>
       </View>
     </Pressable>
@@ -363,6 +363,7 @@ export const SimpleListElement = (props: {
 
 export const SimpleList = (props: {
   list: Array<Nft>,
+  listFunc?: (a: any) => void,
   error: string,
   title: string,
   button?: string,
@@ -398,8 +399,8 @@ export const SimpleList = (props: {
             <View key={idx}>
               <SimpleListElement
                 item={ele}
-                onClick={props.navigation && props.navigation.navigate ? (
-                  () => props.navigation.navigate("NFT", { data: ele })
+                onClick={props.listFunc ? (
+                  () => props.listFunc({ data: ele })
                  ) : () => {}}
               />
               <Spacer />

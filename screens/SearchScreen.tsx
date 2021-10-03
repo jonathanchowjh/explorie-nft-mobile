@@ -65,6 +65,7 @@ export default function SearchScreen({ route, navigation }: RootTabScreenProps<"
         <SimpleList
           title={header}
           list={list}
+          listFunc={(data) => navigation.navigate("ExploryMap", data)}
           error="Search Here..."
           navigation={navigation}
         />

@@ -5,16 +5,64 @@ import defaultNft from "../assets/images/default.png";
 
 export interface AppState {
   nfts: [];
+  myNfts: [];
 }
+
+type AppProviderProps = { children: React.ReactNode };
+
+export const AppContext = React.createContext<{ state: AppState } | undefined>(
+  undefined
+);
+
+export const useAppContext = () => {
+  const context = React.useContext(AppContext);
+  if (!context) {
+    throw new Error(`useAppContext must be used withn a AppProvider`);
+  }
+
+  return context;
+};
+
+export const AppProvider = ({ children }: AppProviderProps) => {
+  return (
+    <AppContext.Provider value={{ state: initialState }}>
+      {children}
+    </AppContext.Provider>
+  );
+};
 
 const LATITUDE = 40.7496569;
 const LONGITUDE = -73.9930029;
 const SPACE = 0.01;
 
 const initialState = {
+  myNfts: [
+    {
+      title: "Etherials meetup @ NFT.NYC",
+      subtitle: "sub",
+      asset_name: "11",
+      type: "collectable",
+      location: "Times square",
+      locationImage:
+        "https://lh5.googleusercontent.com/p/AF1QipNtmaLbgLaTzv0ubPOdDKqsC3fmFFDwRbckH-oZ=w300-h225-p-k-no",
+      locationDescription:
+        "The community of Etherials is coming to NFT.NYC. Participate, come and collect this limited editon NFT!",
+      distance: "0.2 Km",
+      rating: "5 Rating",
+      coordinates: {
+        latitude: 40.7413747,
+        longitude: -73.9817613,
+      },
+      image: defaultNft,
+      success: true,
+    },
+  ],
   nfts: [
     {
       title: "0N1 Force #2819",
+      subtitle: "sub",
+      asset_name: "1",
+      type: "collectable",
       coordinates: {
         latitude: LATITUDE + SPACE,
         longitude: LONGITUDE + SPACE,
@@ -39,6 +87,9 @@ const initialState = {
     },
     {
       title: "Cyber kongz #0000",
+      subtitle: "sub",
+      asset_name: "2",
+      type: "collectable",
       location: "betahaus @ Kreuzberg",
       locationImage:
         "https://lh5.googleusercontent.com/p/AF1QipMF7ZT-a5V0BIgu3ZvstuLKHj9ZFOlOvQt18Zge=w426-h240-k-no",
@@ -63,6 +114,9 @@ const initialState = {
     },
     {
       title: "Ancient articat #12",
+      subtitle: "sub",
+      asset_name: "3",
+      type: "collectable",
       location: "The Morgan Library & Museum",
       locationImage:
         "https://lh5.googleusercontent.com/p/AF1QipMtWDGW_YwJfUvS1miD2LnbPqNOUHxerqJtU3Lp=w408-h272-k-no",
@@ -88,6 +142,9 @@ const initialState = {
     },
     {
       title: "Lost in Space",
+      subtitle: "sub",
+      asset_name: "4",
+      type: "collectable",
       location: "The Museum of Modern Art",
       locationImage:
         "https://lh5.googleusercontent.com/p/AF1QipPZerpfQD7_S9doOlWUcW6ejoVSt6gyF-Uzr8p4=w408-h306-k-no",
@@ -113,6 +170,9 @@ const initialState = {
     },
     {
       title: "Nets vs. Knicks game ticket (front seats)!",
+      subtitle: "sub",
+      asset_name: "5",
+      type: "voucher",
       location: "Madison Square Garden",
       locationImage:
         "https://lh5.googleusercontent.com/p/AF1QipOWmvPrNApBboULzSOxmSEClShG687GpT42oZNh=w408-h514-k-no",
@@ -137,6 +197,9 @@ const initialState = {
     },
     {
       title: "Pop UP by Reggie Watts",
+      subtitle: "sub",
+      asset_name: "6",
+      type: "voucher",
       location: "Central Park",
       locationImage:
         "https://lh5.googleusercontent.com/p/AF1QipNLLJzgpUeIGCzhIVdYiBd6FPEcgP5Z1UM7vwPt=w408-h285-k-no",
@@ -161,6 +224,9 @@ const initialState = {
     },
     {
       title: "Exclusive Chef's special",
+      subtitle: "sub",
+      asset_name: "7",
+      type: "voucher",
       location: "La Grande Boucherie",
       locationImage:
         "https://lh5.googleusercontent.com/p/AF1QipPOnG7fY9Jd87Nu1Q62J0MX4LSmi_WGZdBVN9bo=w408-h271-k-no",
@@ -185,6 +251,9 @@ const initialState = {
     },
     {
       title: "Bored Apes meetup @ NFT.NYC",
+      subtitle: "sub",
+      asset_name: "8",
+      type: "voucher",
       location: "Times square",
       locationImage:
         "https://lh5.googleusercontent.com/p/AF1QipNtmaLbgLaTzv0ubPOdDKqsC3fmFFDwRbckH-oZ=w300-h225-p-k-no",
@@ -201,6 +270,9 @@ const initialState = {
     },
     {
       title: "ON1 Force meetup @ NFT.NYC",
+      subtitle: "sub",
+      asset_name: "9",
+      type: "voucher",
       location: "Times square",
       locationImage:
         "https://lh5.googleusercontent.com/p/AF1QipNtmaLbgLaTzv0ubPOdDKqsC3fmFFDwRbckH-oZ=w300-h225-p-k-no",
@@ -217,6 +289,9 @@ const initialState = {
     },
     {
       title: "Rare Pizza DAO meetup @ NFT.NYC",
+      subtitle: "sub",
+      asset_name: "10",
+      type: "voucher",
       location: "Times square",
       locationImage:
         "https://lh5.googleusercontent.com/p/AF1QipNtmaLbgLaTzv0ubPOdDKqsC3fmFFDwRbckH-oZ=w300-h225-p-k-no",
@@ -231,44 +306,6 @@ const initialState = {
       image: defaultNft,
       success: true,
     },
-    {
-      title: "Etherials meetup @ NFT.NYC",
-      location: "Times square",
-      locationImage:
-        "https://lh5.googleusercontent.com/p/AF1QipNtmaLbgLaTzv0ubPOdDKqsC3fmFFDwRbckH-oZ=w300-h225-p-k-no",
-      locationDescription:
-        "The community of Etherials is coming to NFT.NYC. Participate, come and collect this limited editon NFT!",
-      distance: "0.2 Km",
-      rating: "5 Rating",
-      coordinates: {
-        latitude: 40.7413747,
-        longitude: -73.9817613,
-      },
-      image: defaultNft,
-      success: true,
-    },
   ],
 };
 
-type AppProviderProps = { children: React.ReactNode };
-
-export const AppContext = React.createContext<{ state: AppState } | undefined>(
-  undefined
-);
-
-export const useAppContext = () => {
-  const context = React.useContext(AppContext);
-  if (!context) {
-    throw new Error(`useAppContext must be used withn a AppProvider`);
-  }
-
-  return context;
-};
-
-export const AppProvider = ({ children }: AppProviderProps) => {
-  return (
-    <AppContext.Provider value={{ state: initialState }}>
-      {children}
-    </AppContext.Provider>
-  );
-};
