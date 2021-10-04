@@ -343,14 +343,14 @@ const initialState = {
     },
     {
       title: "Rare Pizza DAO meetup @ NFT.NYC",
-      subtitle: "sub",
+      subtitle: "VOUCHER: $10 dollars off pizzas!!!",
       asset_name: "10",
       type: "voucher",
       location: "Times square",
       locationImage:
         "https://lh5.googleusercontent.com/p/AF1QipNtmaLbgLaTzv0ubPOdDKqsC3fmFFDwRbckH-oZ=w300-h225-p-k-no",
       locationDescription:
-        "The community of Rare Pizza DAO is coming to NFT.NYC. Participate, come and collect this limited editon NFT!",
+        "VOUCHER: $10 dollars off pizzas!!! The community of Rare Pizza DAO is coming to NFT.NYC. Participate, come and collect this limited editon NFT!",
       distance: "0.2 Km",
       rating: "5 Rating",
       coordinates: {
