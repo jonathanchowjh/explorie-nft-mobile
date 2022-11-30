@@ -2,6 +2,7 @@
 
 ### Introduction
 An NFT platform connecting brands to people through NFT vouchers and collectables. By using geo-tagged NFTs, we encourage ‘Pokemon Go’ inspired exploration of neighbourhoods and streets.
+* [Hackathon Article](https://news.smu.edu.sg/news/2021/11/10/smu-team-bags-us100000-seed-funding-develop-nft-platform-international-hackathon)
 * [Mobile App - explorie-nft-mobile (this repo)](https://github.com/jonathanchowjh/explorie-nft-mobile)
 * [Whitepaper - Hack! Cardano](https://docs.google.com/document/d/1icdLZj9oOVM4EatDzIAjqqaYFevsHM0cuwCzsfgP2p8/edit?usp=sharing)
 * [Pitchdeck - Hack! Cardano](https://drive.google.com/file/d/1oaYbIqylIBtEr2xg9Bbuw5I2L5qwA36-/view?usp=sharing)
