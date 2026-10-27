@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+
 export type Drop = {
   id: string;
   title: string;
@@ -5,20 +7,8 @@ export type Drop = {
   coordinate: { latitude: number; longitude: number };
 };
 
-// How close a phone must be to a drop to claim it.
+// How close a phone must be to a drop to claim it, unless the server is started with another radius.
 export const CLAIM_RADIUS_METRES = 100;
 
-// The same drops as the app's data/seed.ts, without its images and copy. Ids must match.
-export const drops: Drop[] = [
-  { id: "1", title: "0N1 Force #2819", kind: "collectable", coordinate: { latitude: 40.7596569, longitude: -73.9830029 } },
-  { id: "2", title: "Cyber kongz #0000", kind: "collectable", coordinate: { latitude: 40.7396569, longitude: -74.0030029 } },
-  { id: "3", title: "Ancient artifact #12", kind: "collectable", coordinate: { latitude: 40.748758, longitude: -73.9813067 } },
-  { id: "4", title: "Lost in Space", kind: "collectable", coordinate: { latitude: 40.7735653, longitude: -73.9777152 } },
-  { id: "5", title: "Nets vs. Knicks game ticket (front seats)!", kind: "voucher", coordinate: { latitude: 40.7547105, longitude: -73.9856321 } },
-  { id: "6", title: "Pop UP by Reggie Watts", kind: "voucher", coordinate: { latitude: 40.7747105, longitude: -73.9656321 } },
-  { id: "7", title: "Exclusive Chef's special", kind: "voucher", coordinate: { latitude: 40.7647105, longitude: -73.9856321 } },
-  { id: "8", title: "Bored Apes meetup @ NFT.NYC", kind: "voucher", coordinate: { latitude: 40.7579747, longitude: -73.9877313 } },
-  { id: "9", title: "ON1 Force meetup @ NFT.NYC", kind: "voucher", coordinate: { latitude: 40.7513747, longitude: -73.9877613 } },
-  { id: "10", title: "Rare Pizza DAO meetup @ NFT.NYC", kind: "voucher", coordinate: { latitude: 40.7413747, longitude: -73.9877613 } },
-  { id: "11", title: "Etherials meetup @ NFT.NYC", kind: "collectable", coordinate: { latitude: 40.7413747, longitude: -73.9817613 } },
-];
+// The app bundles this file too, adding each drop's images and copy by id.
+export const drops = JSON.parse(readFileSync(new URL("drops.json", import.meta.url), "utf8")) as Drop[];

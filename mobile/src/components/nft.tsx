@@ -79,8 +79,12 @@ export function NftCards({ title, items, onPress, onMore }: {
   );
 }
 
-export function NftMapCard({ nft, onCollect, onDetails }: {
+export function NftMapCard({ nft, distance, collected, onCollect, onDetails }: {
   nft: Nft;
+  // How far the phone is from the drop, once that's known.
+  distance?: string;
+  // Whether the wallet already holds it; then the main button opens it there instead.
+  collected: boolean;
   onCollect: () => void;
   onDetails: () => void;
 }) {
@@ -91,11 +95,17 @@ export function NftMapCard({ nft, onCollect, onDetails }: {
         <LocationPhoto nft={nft} style={styles.mapCardPhoto} />
         <View>
           <Text style={styles.mapCardPlace}>{nft.location.name}</Text>
-          <Text style={styles.mapCardDistance}>{nft.distance} away</Text>
+          {distance && <Text style={styles.mapCardDistance}>{distance} away</Text>}
         </View>
       </View>
       <View style={styles.mapCardButtons}>
-        <Button title="Collect" icon="check" iconColor={colors.brand} onPress={onCollect} style={styles.collectButton} />
+        <Button
+          title={collected ? "View in wallet" : "Scan to collect"}
+          icon={collected ? "wallet" : "qrcode"}
+          iconColor={colors.brand}
+          onPress={onCollect}
+          style={styles.collectButton}
+        />
         <Button icon="info-circle" label="Details" iconColor="white" onPress={onDetails} style={styles.infoButton} />
       </View>
     </View>

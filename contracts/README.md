@@ -10,7 +10,8 @@ An [Aiken](https://aiken-lang.org) minting policy for Explorie NFTs (Plutus V3),
 
 ```sh
 aiken check   # run the tests
-aiken build   # compile to plutus.json, which the server loads
+aiken build -o ../server/plutus.json   # compile the blueprint the server loads
 ```
 
-`plutus.json` is committed so the server doesn't need Aiken installed. Run `aiken build` after changing the validator.
+The blueprint lives in [server/](../server), so the server runs without this folder or Aiken installed. Rebuild it
+after changing the validator.

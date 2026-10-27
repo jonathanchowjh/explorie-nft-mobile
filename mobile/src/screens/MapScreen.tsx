@@ -6,6 +6,7 @@ import type { ScreenProps } from "../navigation";
 import { catalogue } from "../data/seed";
 import { findNft, useNfts } from "../state/NftStore";
 import { NftMapCard } from "../components/nft";
+import { distanceMetres, formatDistance, usePosition } from "../location";
 
 const CENTER = { latitude: 40.7496569, longitude: -73.9930029 };
 const LATITUDE_DELTA = 0.0922;
@@ -13,14 +14,17 @@ const pointer = require("../../assets/images/pointer.png");
 
 export default function MapScreen({ navigation, route }: ScreenProps<"Map">) {
   const { width, height } = useWindowDimensions();
-  const { collect } = useNfts();
   const [selectedId, setSelectedId] = React.useState(route.params?.id ?? catalogue[0].id);
   const selected = findNft(selectedId);
+  const position = usePosition();
+  const { wallet } = useNfts();
+  const collected = wallet.some((n) => n.id === selectedId);
 
   return (
     <View style={styles.container}>
       <MapView
         style={StyleSheet.absoluteFill}
+        showsUserLocation
         initialRegion={{ ...CENTER, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LATITUDE_DELTA * (width / height) }}
       >
         {catalogue.map((nft) => (
@@ -38,7 +42,11 @@ export default function MapScreen({ navigation, route }: ScreenProps<"Map">) {
       <SafeAreaView edges={["bottom"]}>
         <NftMapCard
           nft={selected}
-          onCollect={() => navigation.navigate("Info", { id: selected.id, success: collect(selected.id) })}
+          distance={position && formatDistance(distanceMetres(position, selected.location.coordinate))}
+          collected={collected}
+          onCollect={() =>
+            collected ? navigation.navigate("Nft", { id: selectedId }) : navigation.navigate("Scanner", undefined, { pop: true })
+          }
           onDetails={() => navigation.navigate("Redeem", { id: selected.id })}
         />
       </SafeAreaView>

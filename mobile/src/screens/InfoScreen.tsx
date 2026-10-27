@@ -15,9 +15,8 @@ export default function InfoScreen({ navigation, route }: ScreenProps<"Info">) {
     return () => clearTimeout(timer);
   }, [navigation]);
 
-  const defaultMessage = success
-    ? `You redeemed the NFT: ${nft?.title}!`
-    : "In order to redeem this NFT you have to be in the correct location";
+  // Callers pass a message except for a successful claim.
+  const defaultMessage = success ? `Added to your wallet: ${nft?.title}` : "Something went wrong.";
 
   return (
     <View style={styles.container}>

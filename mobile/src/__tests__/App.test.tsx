@@ -1,8 +1,20 @@
 import React from "react";
-import { describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import App from "../App";
+import { FakeServer } from "../../test/FakeServer";
 
+// Scanner tests cover the camera; here it only needs to stand in for the screen.
+jest.mock("expo-camera", () => ({ useCameraPermissions: () => [null, jest.fn()], CameraView: () => null }));
+// The phone stands at Madison Square Garden.
+jest.mock("expo-location", () => ({
+  Accuracy: { Balanced: 3 },
+  requestForegroundPermissionsAsync: () => Promise.resolve({ granted: true }),
+  watchPositionAsync: (_options: object, onChange: (l: object) => void) => {
+    onChange({ coords: { latitude: 40.7547105, longitude: -73.9856321 } });
+    return Promise.resolve({ remove: () => {} });
+  },
+}));
 // The map is a native view with no JS fallback; these tests don't exercise it.
 jest.mock("react-native-maps", () => ({ __esModule: true, default: () => null, Marker: () => null }));
 // Icons load their font file on mount, which Jest's asset stubs can't serve.
@@ -21,12 +33,47 @@ async function pressLast(label: string) {
 }
 
 describe("App", () => {
+  let server: FakeServer;
+  beforeEach(() => {
+    server = new FakeServer();
+    server.install();
+  });
+
   it("opens on Home with the three NFT sections", async () => {
     await render(<App />);
     expect(await screen.findByText("Popular NFTs")).toBeTruthy();
     expect(screen.getByText("Vouchers Near Me")).toBeTruthy();
     expect(screen.getByText("Collectables Near Me")).toBeTruthy();
-    expect(screen.getByText("3 NFTs collected")).toBeTruthy();
+    // The wallet comes from the server.
+    expect(await screen.findByText("3 NFTs collected")).toBeTruthy();
+  });
+
+  it("shows why the wallet couldn't load", async () => {
+    server.unreachable = true;
+    await render(<App />);
+    await pressLast("Wallet");
+    expect(await screen.findByText("Couldn't reach the Explorie server.")).toBeTruthy();
+    expect(screen.getAllByText("Nothing Here")).toHaveLength(2);
+  });
+
+  it("says when a build doesn't know where the server is", async () => {
+    delete process.env.EXPO_PUBLIC_SERVER_URL;
+    await render(<App />);
+    await pressLast("Wallet");
+    expect(await screen.findByText(/doesn't know where the Explorie server is/)).toBeTruthy();
+  });
+
+  it("ignores a slow wallet response that a newer one overtook", async () => {
+    let release!: () => void;
+    server.walletDelay = new Promise((resolve) => (release = resolve));
+    await render(<App />);
+    server.walletDelay = undefined;
+    server.held.push({ unit: "u5", dropId: "5", redeemed: false });
+
+    await pressLast("Wallet");
+    expect(await screen.findByText("Nets vs. Knicks game ticket (front seats)!")).toBeTruthy();
+    await act(async () => release());
+    expect(screen.getByText("Nets vs. Knicks game ticket (front seats)!")).toBeTruthy();
   });
 
   it("keeps history through header and footer links, so Back works", async () => {
@@ -43,36 +90,39 @@ describe("App", () => {
     expect(screen.getByText("Popular NFTs", { includeHiddenElements: true })).toBeTruthy();
   });
 
-  it("collects an in-range NFT from the map card", async () => {
-    jest.useFakeTimers();
+  it("shows how far the phone is from the drop", async () => {
     await render(<App />);
-
     await fireEvent.press((await screen.findAllByText("0N1 Force #2819"))[0]);
-    await pressLast("Collect");
-    expect(await screen.findByText("Congrats!")).toBeTruthy();
+    expect(await screen.findByText("590 m away")).toBeTruthy();
 
-    await act(async () => {
-      jest.advanceTimersByTime(5000);
-    });
-    expect(screen.getByText("4 NFTs collected")).toBeTruthy();
-    jest.useRealTimers();
+    await pressLast("Details");
+    expect(await screen.findByText("590 m")).toBeTruthy();
   });
 
-  it("collects from the details screen, but not when out of range", async () => {
-    jest.useFakeTimers();
+  it("opens a drop the wallet already holds instead of the scanner", async () => {
     await render(<App />);
+    expect(await screen.findByText("3 NFTs collected")).toBeTruthy();
+    await pressLast("Search");
+    await fireEvent.changeText(screen.getByPlaceholderText("Search"), "Etherials");
+    await fireEvent.press(await screen.findByText("Etherials meetup @ NFT.NYC"));
 
-    // Cyber kongz is the one NFT the user isn't close enough to.
-    await fireEvent.press((await screen.findAllByText("Cyber kongz #0000"))[0]);
+    await pressLast("View in wallet");
+    expect(await screen.findByText("Marketplace")).toBeTruthy();
+  });
+
+  it("collects from the map card by opening the scanner", async () => {
+    await render(<App />);
+    await fireEvent.press((await screen.findAllByText("0N1 Force #2819"))[0]);
+    await pressLast("Scan to collect");
+    expect(screen.getByText("Requesting camera permission")).toBeTruthy();
+  });
+
+  it("collects from the details screen by opening the scanner", async () => {
+    await render(<App />);
+    await fireEvent.press((await screen.findAllByText("0N1 Force #2819"))[0]);
     await pressLast("Details");
-    await pressLast("Collect");
-    expect(await screen.findByText("Woopsy!")).toBeTruthy();
-
-    await act(async () => {
-      jest.advanceTimersByTime(5000);
-    });
-    expect(screen.getByText("3 NFTs collected")).toBeTruthy();
-    jest.useRealTimers();
+    await pressLast("Scan to collect");
+    expect(screen.getByText("Requesting camera permission")).toBeTruthy();
   });
 
   it("redeems a voucher from the wallet and shows it as redeemed", async () => {
@@ -94,6 +144,7 @@ describe("App", () => {
     await fireEvent.press(await screen.findByText("Pop UP by Reggie Watts"));
     expect(await screen.findByText("Redeemed")).toBeTruthy();
     expect(screen.queryByText("Redeem")).toBeNull();
+    expect(server.held.find((h) => h.dropId === "6")?.redeemed).toBe(true);
     jest.useRealTimers();
   });
 });

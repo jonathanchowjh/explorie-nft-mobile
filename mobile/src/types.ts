@@ -7,9 +7,6 @@ export type Nft = {
   title: string;
   kind: NftKind;
   image: ImageSourcePropType;
-  // Stands in for a real location check: whether the user is close enough to collect it.
-  inRange: boolean;
-  distance: string;
   rating: string;
   location: {
     name: string;
@@ -19,7 +16,5 @@ export type Nft = {
   };
 };
 
-// An NFT in the user's wallet, in the order it was collected.
-export type OwnedNft = { id: string; redeemed: boolean };
-
-export type WalletNft = Nft & { redeemed: boolean };
+// An NFT the wallet holds, in the order it was minted. `unit` is its on-chain id.
+export type WalletNft = Nft & { unit: string; redeemed: boolean };

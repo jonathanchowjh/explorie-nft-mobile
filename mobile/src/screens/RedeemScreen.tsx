@@ -6,11 +6,13 @@ import { findNft, useNfts } from "../state/NftStore";
 import { colors } from "../theme";
 import { Button, Icon } from "../components/ui";
 import { LocationPhoto } from "../components/nft";
+import { distanceMetres, formatDistance, usePosition } from "../location";
 
 export default function RedeemScreen({ navigation, route }: ScreenProps<"Redeem">) {
   const nft = findNft(route.params.id);
-  const { collect } = useNfts();
   const insets = useSafeAreaInsets();
+  const position = usePosition();
+  const collected = useNfts().wallet.some((n) => n.id === nft.id);
 
   return (
     <View style={styles.container}>
@@ -29,8 +31,12 @@ export default function RedeemScreen({ navigation, route }: ScreenProps<"Redeem"
           <View style={styles.summaryText}>
             <Text style={styles.title}>{nft.title}</Text>
             <View style={styles.stats}>
-              <Icon name="arrow-down" size={20} color={colors.brand} />
-              <Text>{nft.distance}</Text>
+              {position && (
+                <>
+                  <Icon name="arrow-down" size={20} color={colors.brand} />
+                  <Text>{formatDistance(distanceMetres(position, nft.location.coordinate))}</Text>
+                </>
+              )}
               <Icon name="heart" size={20} color={colors.brand} />
               <Text>{nft.rating}</Text>
             </View>
@@ -39,8 +45,10 @@ export default function RedeemScreen({ navigation, route }: ScreenProps<"Redeem"
         </View>
         <Text style={styles.description}>{nft.location.description}</Text>
         <Button
-          title="Collect"
-          onPress={() => navigation.navigate("Info", { id: nft.id, success: collect(nft.id) })}
+          title={collected ? "View in wallet" : "Scan to collect"}
+          onPress={() =>
+            collected ? navigation.navigate("Nft", { id: nft.id }) : navigation.navigate("Scanner", undefined, { pop: true })
+          }
           style={styles.collect}
           textStyle={styles.collectText}
         />

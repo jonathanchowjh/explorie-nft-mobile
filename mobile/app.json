@@ -8,9 +8,11 @@
     "scheme": "explorie",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jonathanchowjh.explorie"
     },
     "android": {
+      "package": "com.jonathanchowjh.explorie",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -33,6 +35,12 @@
         "expo-camera",
         {
           "cameraPermission": "Explorie uses the camera to scan NFT QR codes."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Explorie uses your location to check you're at a drop when you claim its NFT."
         }
       ],
       "expo-font",

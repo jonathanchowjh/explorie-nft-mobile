@@ -1,29 +1,30 @@
 import { describe, expect, it } from "@jest/globals";
-import { collect, findNft, redeem, searchNfts } from "../state/NftStore";
+import { findNft, searchNfts, toWallet } from "../state/NftStore";
+import { parseClaimQr } from "../api";
 
-describe("collect", () => {
-  it("adds an NFT to the end of the wallet, unredeemed", () => {
-    expect(collect([{ id: "1", redeemed: true }], "2")).toEqual([
-      { id: "1", redeemed: true },
-      { id: "2", redeemed: false },
+describe("toWallet", () => {
+  it("shows several of one drop once, as the unredeemed one if there is one", () => {
+    const wallet = toWallet([
+      { unit: "a", dropId: "6", redeemed: true },
+      { unit: "b", dropId: "11", redeemed: false },
+      { unit: "c", dropId: "6", redeemed: false },
+      { unit: "d", dropId: "6", redeemed: false },
+    ]);
+    expect(wallet.map((n) => [n.id, n.unit, n.redeemed])).toEqual([
+      ["6", "c", false],
+      ["11", "b", false],
     ]);
   });
 
-  it("ignores an NFT that is already owned", () => {
-    const owned = [{ id: "1", redeemed: true }];
-    expect(collect(owned, "1")).toBe(owned);
-  });
-});
-
-describe("redeem", () => {
-  it("marks only that NFT redeemed and keeps wallet order", () => {
-    const owned = [
-      { id: "6", redeemed: false },
-      { id: "11", redeemed: false },
-    ];
-    expect(redeem(owned, "6")).toEqual([
-      { id: "6", redeemed: true },
-      { id: "11", redeemed: false },
+  it("keeps the server's order and skips drops the app doesn't know", () => {
+    const wallet = toWallet([
+      { unit: "b", dropId: "6", redeemed: true },
+      { unit: "x", dropId: "99", redeemed: false },
+      { unit: "a", dropId: "1", redeemed: false },
+    ]);
+    expect(wallet.map((n) => [n.title, n.unit, n.redeemed])).toEqual([
+      ["Pop UP by Reggie Watts", "b", true],
+      ["0N1 Force #2819", "a", false],
     ]);
   });
 });
@@ -41,5 +42,17 @@ describe("searchNfts", () => {
 describe("findNft", () => {
   it("throws for an unknown id", () => {
     expect(() => findNft("nope")).toThrow("No NFT with id nope");
+  });
+});
+
+describe("parseClaimQr", () => {
+  it("reads the drop id and claim code from a poster", () => {
+    expect(parseClaimQr("explorie:10:0123456789abcdef")).toEqual({ dropId: "10", code: "0123456789abcdef" });
+  });
+
+  it("rejects anything else", () => {
+    expect(parseClaimQr("5")).toBeNull();
+    expect(parseClaimQr("https://example.com")).toBeNull();
+    expect(parseClaimQr("explorie:5:")).toBeNull();
   });
 });

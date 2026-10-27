@@ -124,3 +124,33 @@ success after 0.5 s; a "Tap to Scan your NFT" button re-arms scanning.
 - **Wallet banner:** the address button copies the wallet address; "Settings" opens Settings.
 - **Home:** "NFTs collected" counts the wallet (3 at launch, not a fixed 20), and its bar shows the share of the
   catalogue collected.
+
+## Claiming through the server (after the rebuild)
+- **Scanner:** a drop's QR poster holds `explorie:<drop id>:<claim code>`. Scanning one asks for location access, then
+  sends the code, the phone's location and the wallet address to the [claim server](../server), with a "Claiming your
+  NFT…" spinner in between. On success the NFT is added to the wallet and Info shows "Congrats!". On failure Info
+  shows the server's reason (wrong code, too far from the drop, already claimed) or that the server couldn't be
+  reached. A bare NFT id such as `5` is no longer accepted.
+- **Map card and details screen:** "Collect" is now "Scan to collect" and opens the scanner. The app can't claim
+  without the poster's code.
+- **Location check:** the server checks the phone's real distance to the drop. The seed data's `success` flag is gone,
+  so Cyber kongz is no longer special.
+- **Wallet:** the app's key comes from `EXPO_PUBLIC_WALLET_KEY` (a testnet key; it ships inside the app). The banner
+  shows and copies the key's address, or shows "No wallet address" without a key. Redeeming a voucher signs the
+  request with the key, so the server knows it's the owner.
+- **Wallet:** loaded from the server at launch, after each claim or redemption, and on every visit to Wallet. It holds
+  what the address holds on-chain, so the app no longer has a built-in starting wallet. The server mints the old one
+  (Etherials, Pop UP, and Chef's special redeemed) to its demo address. If the wallet can't load, Wallet shows why,
+  above empty sections, and Home counts 0 NFTs collected.
+- **Redeeming a voucher:** the server records it. The button shows "Redeeming…" while it waits. If the server refuses,
+  Info shows its reason instead of "Voucher Redeemed!".
+- **Drop data:** ids, titles, kinds and coordinates live in the server's `src/drops.json`, which the app bundles too.
+- **Distances:** the map card ("590 m away") and details screen show the phone's real distance to the drop, updated
+  as it moves, instead of a fixed string per NFT. They're hidden until the position is known, or if location access is
+  refused. The map shows the user's position.
+- **Typing a code:** the scanner has a field for the line printed under a poster's QR code, for a poster the camera
+  can't read or a device without a camera. It's there even when camera access is refused.
+- **Collected drops:** on the map card and the details screen, a drop the wallet already holds shows "View in wallet",
+  which opens it, instead of "Scan to collect".
+- **Claim message:** a successful claim says "Added to your wallet: `<title>`". It used to say "You redeemed the NFT",
+  which was wrong for a claim and doubled the "!" on titles that end in one.

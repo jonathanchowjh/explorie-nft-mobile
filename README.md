@@ -54,7 +54,19 @@ npm install
 npx expo start    # scan the QR code with Expo Go, or press i / a for a simulator
 ```
 
-In the app's scanner, a QR code containing an NFT's id (for example `5`) collects that NFT.
+To claim NFTs, also run the [claim server](server) on the same machine:
+
+```sh
+cd server
+npm install
+CLAIM_RADIUS_METRES=20000000 npm start   # the drops are in Manhattan; a wide radius lets you claim from anywhere
+```
+
+It mints a demo wallet of three NFTs and writes a QR poster for each drop to `server/posters/`. Copy
+[mobile/.env.example](mobile/.env.example) to `mobile/.env.local` to use that wallet, start the app, and scan a poster
+on screen. On a simulator, which has no camera, type the line printed under the QR code, such as
+`explorie:5:e7e7b1c205e7ee6d`, into the scanner instead. The app sends the code and the phone's location to the server, which mints the NFT on its
+local emulator chain.
 
 Checks, from `mobile/`:
 
@@ -62,6 +74,7 @@ Checks, from `mobile/`:
 npm run lint
 npm run typecheck
 npm test
+npm run test:e2e   # the app against the real claim server; needs server/ installed
 ```
 
 The contract and claim server have their own instructions in [contracts/README.md](contracts/README.md) and [server/README.md](server/README.md).
