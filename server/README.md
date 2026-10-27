@@ -1,7 +1,7 @@
 # Explorie server
 
 Verifies NFT claims and mints them with the [contract](../contracts) to the claimer's own Cardano address.
-It runs against [Lucid Evolution](https://github.com/Anastasia-Labs/lucid-evolution)'s in-memory emulator
+By default it runs against [Lucid Evolution](https://github.com/Anastasia-Labs/lucid-evolution)'s in-memory emulator
 chain, so it needs no keys, accounts or network.
 
 ```sh
@@ -9,6 +9,19 @@ npm install
 npm start   # prints the demo wallet address and each drop's QR poster contents
 npm test
 ```
+
+## On the Preview testnet
+
+Set these and `npm start` mints real Preview NFTs instead:
+
+- `BLOCKFROST_PROJECT_ID`: a [Blockfrost](https://blockfrost.io) project id for Preview.
+- `ISSUER_PRIVATE_KEY`: the issuer's `ed25519_sk…` key. Its address needs test ada from the
+  [faucet](https://docs.cardano.org/cardano-testnets/tools/faucet) to pay fees and the ada each NFT is sent with.
+- `CLAIM_SECRET`: required here, because printed posters must keep working across restarts.
+- `DATA_FILE` (optional, default `explorie.db`): where claims, drops per NFT and redemptions are kept.
+
+There's no demo wallet on the testnet. Put your own Preview address in the app's `.env.local`. Each claim waits for
+its transaction to confirm, about 20 seconds, and claims are minted one at a time.
 
 ## API
 
@@ -40,7 +53,7 @@ their wallet. The server only adds which drop each NFT came from and whether it 
 `POST /redemptions` with `{ address, unit }` marks a voucher redeemed. The address must hold it. Returns `201`, or
 `400`, `403`, `404` or `409` with `{ error }`.
 
-On start-up the server mints the original app's demo wallet to a fixed demo address (or `DEMO_ADDRESS`): Etherials,
+Locally, on start-up the server mints the original app's demo wallet to a fixed demo address (or `DEMO_ADDRESS`): Etherials,
 Pop UP, and Chef's special already redeemed. It does this through its own API, so the seed passes the same checks.
 
 The server listens on all interfaces, so a phone on the same network can reach it.
@@ -51,11 +64,13 @@ contract rejects them.
 
 ## Limits
 
-- **State is in memory**: the chain, the claims, which drop each NFT came from, and redemptions. It all resets on
-  restart.
+- **Locally, state is in memory**: the chain and the server's records both reset on restart. On the testnet the
+  records are kept in `DATA_FILE`.
 - **Redemptions aren't authenticated.** Anyone who knows an address and a voucher it holds can redeem it, because the
   app has no key to sign with. A wallet that can sign (CIP-8 `signData`) would prove ownership.
-- **To run on a real network**, give `Lucid` a Blockfrost provider and the issuer's key from the environment instead of
-  the emulator in `src/main.ts`. `Minter` and the API don't change.
+- **Testnet mode hasn't been run against Blockfrost yet.** The emulator tests cover `Minter` and the API, which are
+  the same in both modes.
+- **Minting is one at a time.** Each mint spends one of the issuer's outputs, so the next waits for it to confirm. On
+  a real network that's one claim per block; splitting the issuer's ada across several outputs would allow more.
 - **The drops come from the app's [drops.json](../mobile/src/data/drops.json)**, so both sides always agree on ids and
   coordinates.

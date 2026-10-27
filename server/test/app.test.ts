@@ -1,3 +1,6 @@
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { beforeEach, describe, test } from "node:test";
 import assert from "node:assert/strict";
 import {
@@ -176,6 +179,19 @@ describe("POST /redemptions", () => {
       (await (await wallet()).json()).nfts.map((n: { redeemed: boolean }) => n.redeemed),
       [false, false],
     );
+  });
+});
+
+describe("records", () => {
+  test("survive a restart when kept in a file", async () => {
+    const file = join(mkdtempSync(join(tmpdir(), "explorie-")), "records.db");
+    app = buildApp(minter, SECRET, undefined, file);
+    const { unit } = await (await claim()).json();
+    assert.equal((await redeem(unit)).status, 201);
+
+    app = buildApp(minter, SECRET, undefined, file);
+    assert.deepEqual((await (await wallet()).json()).nfts, [{ unit, dropId: "6", redeemed: true }]);
+    assert.equal((await claim()).status, 409);
   });
 });
 

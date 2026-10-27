@@ -1,0 +1,3 @@
+# The testnet server's records (DATA_FILE).
+*.db
+*.db-*
