@@ -1,0 +1,3 @@
+# Each project (mobile/, server/, contracts/) ignores its own build output.
+node_modules/
+.DS_Store
