@@ -6,10 +6,12 @@ import { findNft } from "../state/NftStore";
 import { colors } from "../theme";
 import { Button, Icon } from "../components/ui";
 import { LocationPhoto } from "../components/nft";
+import { distanceMetres, formatDistance, usePosition } from "../location";
 
 export default function RedeemScreen({ navigation, route }: ScreenProps<"Redeem">) {
   const nft = findNft(route.params.id);
   const insets = useSafeAreaInsets();
+  const position = usePosition();
 
   return (
     <View style={styles.container}>
@@ -28,8 +30,12 @@ export default function RedeemScreen({ navigation, route }: ScreenProps<"Redeem"
           <View style={styles.summaryText}>
             <Text style={styles.title}>{nft.title}</Text>
             <View style={styles.stats}>
-              <Icon name="arrow-down" size={20} color={colors.brand} />
-              <Text>{nft.distance}</Text>
+              {position && (
+                <>
+                  <Icon name="arrow-down" size={20} color={colors.brand} />
+                  <Text>{formatDistance(distanceMetres(position, nft.location.coordinate))}</Text>
+                </>
+              )}
               <Icon name="heart" size={20} color={colors.brand} />
               <Text>{nft.rating}</Text>
             </View>

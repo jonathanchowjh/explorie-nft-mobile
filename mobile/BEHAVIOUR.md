@@ -144,3 +144,6 @@ success after 0.5 s; a "Tap to Scan your NFT" button re-arms scanning.
 - **Redeeming a voucher:** the server records it. The button shows "Redeeming…" while it waits. If the server refuses,
   Info shows its reason instead of "Voucher Redeemed!".
 - **Drop data:** ids, titles, kinds and coordinates live in `src/data/drops.json`, which the server reads too.
+- **Distances:** the map card ("590 m away") and details screen show the phone's real distance to the drop, updated
+  as it moves, instead of a fixed string per NFT. They're hidden until the position is known, or if location access is
+  refused. The map shows the user's position.

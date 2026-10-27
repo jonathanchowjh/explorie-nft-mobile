@@ -1,5 +1,5 @@
 import Constants from "expo-constants";
-import * as Location from "expo-location";
+import { currentPosition } from "./location";
 
 const SERVER_PORT = 8787;
 
@@ -56,17 +56,10 @@ export async function claimDrop(dropId: string, code: string): Promise<Result> {
   const address = walletAddress();
   if (!address) return noAddress;
 
-  const permission = await Location.requestForegroundPermissionsAsync();
-  if (!permission.granted) return { ok: false, message: "Explorie needs your location to check you're at the drop." };
-  let location;
-  try {
-    const { coords } = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-    location = { latitude: coords.latitude, longitude: coords.longitude };
-  } catch {
-    return { ok: false, message: "Couldn't find your location." };
-  }
+  const location = await currentPosition();
+  if (!location.ok) return location;
 
-  const result = await call("/claims", { dropId, code, address, location });
+  const result = await call("/claims", { dropId, code, address, location: location.value });
   return result.ok ? { ok: true, value: undefined } : result;
 }
 

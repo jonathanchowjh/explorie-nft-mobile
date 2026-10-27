@@ -7,7 +7,6 @@ export type Nft = {
   title: string;
   kind: NftKind;
   image: ImageSourcePropType;
-  distance: string;
   rating: string;
   location: {
     name: string;

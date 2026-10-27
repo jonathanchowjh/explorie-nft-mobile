@@ -6,6 +6,15 @@ import { FakeServer } from "../../test/FakeServer";
 
 // Scanner tests cover the camera; here it only needs to stand in for the screen.
 jest.mock("expo-camera", () => ({ useCameraPermissions: () => [null, jest.fn()], CameraView: () => null }));
+// The phone stands at Madison Square Garden.
+jest.mock("expo-location", () => ({
+  Accuracy: { Balanced: 3 },
+  requestForegroundPermissionsAsync: () => Promise.resolve({ granted: true }),
+  watchPositionAsync: (_options: object, onChange: (l: object) => void) => {
+    onChange({ coords: { latitude: 40.7547105, longitude: -73.9856321 } });
+    return Promise.resolve({ remove: () => {} });
+  },
+}));
 // The map is a native view with no JS fallback; these tests don't exercise it.
 jest.mock("react-native-maps", () => ({ __esModule: true, default: () => null, Marker: () => null }));
 // Icons load their font file on mount, which Jest's asset stubs can't serve.
@@ -59,6 +68,15 @@ describe("App", () => {
     expect(screen.getByText("My Vouchers")).toBeTruthy();
     // Home is still at the bottom of the stack, mounted but hidden.
     expect(screen.getByText("Popular NFTs", { includeHiddenElements: true })).toBeTruthy();
+  });
+
+  it("shows how far the phone is from the drop", async () => {
+    await render(<App />);
+    await fireEvent.press((await screen.findAllByText("0N1 Force #2819"))[0]);
+    expect(await screen.findByText("590 m away")).toBeTruthy();
+
+    await pressLast("Details");
+    expect(await screen.findByText("590 m")).toBeTruthy();
   });
 
   it("collects from the map card by opening the scanner", async () => {

@@ -79,8 +79,10 @@ export function NftCards({ title, items, onPress, onMore }: {
   );
 }
 
-export function NftMapCard({ nft, onCollect, onDetails }: {
+export function NftMapCard({ nft, distance, onCollect, onDetails }: {
   nft: Nft;
+  // How far the phone is from the drop, once that's known.
+  distance?: string;
   onCollect: () => void;
   onDetails: () => void;
 }) {
@@ -91,7 +93,7 @@ export function NftMapCard({ nft, onCollect, onDetails }: {
         <LocationPhoto nft={nft} style={styles.mapCardPhoto} />
         <View>
           <Text style={styles.mapCardPlace}>{nft.location.name}</Text>
-          <Text style={styles.mapCardDistance}>{nft.distance} away</Text>
+          {distance && <Text style={styles.mapCardDistance}>{distance} away</Text>}
         </View>
       </View>
       <View style={styles.mapCardButtons}>

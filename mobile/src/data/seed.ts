@@ -12,12 +12,11 @@ export const profile = {
 };
 
 // What the app shows for each drop, beyond the id, title, kind and coordinate it shares with the server in drops.json.
-type Copy = Pick<Nft, "image" | "distance" | "rating"> & { location: Omit<Nft["location"], "coordinate"> };
+type Copy = Pick<Nft, "image" | "rating"> & { location: Omit<Nft["location"], "coordinate"> };
 
 const copy: Record<string, Copy> = {
   "1": {
     image: require("../../assets/images/oni.png"),
-    distance: "2 Km",
     rating: "4.8 Rating",
     location: {
       name: "Graffiti Zone @ Mauer Park",
@@ -29,7 +28,6 @@ const copy: Record<string, Copy> = {
   },
   "2": {
     image: require("../../assets/images/pixilart.png"),
-    distance: "500 m",
     rating: "2.8 Rating",
     location: {
       name: "betahaus @ Kreuzberg",
@@ -41,7 +39,6 @@ const copy: Record<string, Copy> = {
   },
   "3": {
     image: defaultImage,
-    distance: "1.4 Km",
     rating: "4.1 Rating",
     location: {
       name: "The Morgan Library & Museum",
@@ -53,7 +50,6 @@ const copy: Record<string, Copy> = {
   },
   "4": {
     image: defaultImage,
-    distance: "1.4 Km",
     rating: "4.1 Rating",
     location: {
       name: "The Museum of Modern Art",
@@ -63,7 +59,6 @@ const copy: Record<string, Copy> = {
   },
   "5": {
     image: defaultImage,
-    distance: "1.4 Km",
     rating: "5 Rating",
     location: {
       name: "Madison Square Garden",
@@ -75,7 +70,6 @@ const copy: Record<string, Copy> = {
   },
   "6": {
     image: defaultImage,
-    distance: "1.4 Km",
     rating: "5 Rating",
     location: {
       name: "Central Park",
@@ -87,7 +81,6 @@ const copy: Record<string, Copy> = {
   },
   "7": {
     image: defaultImage,
-    distance: "0.4 Km",
     rating: "5 Rating",
     location: {
       name: "La Grande Boucherie",
@@ -99,7 +92,6 @@ const copy: Record<string, Copy> = {
   },
   "8": {
     image: defaultImage,
-    distance: "0.2 Km",
     rating: "5 Rating",
     location: {
       name: "Times Square",
@@ -111,7 +103,6 @@ const copy: Record<string, Copy> = {
   },
   "9": {
     image: defaultImage,
-    distance: "0.2 Km",
     rating: "5 Rating",
     location: {
       name: "Times Square",
@@ -123,7 +114,6 @@ const copy: Record<string, Copy> = {
   },
   "10": {
     image: defaultImage,
-    distance: "0.2 Km",
     rating: "5 Rating",
     location: {
       name: "Times Square",
@@ -135,7 +125,6 @@ const copy: Record<string, Copy> = {
   },
   "11": {
     image: defaultImage,
-    distance: "0.2 Km",
     rating: "5 Rating",
     location: {
       name: "Times Square",
