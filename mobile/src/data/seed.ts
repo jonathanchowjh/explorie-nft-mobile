@@ -1,4 +1,4 @@
-import type { Nft, NftKind, OwnedNft } from "../types";
+import type { Nft, NftKind } from "../types";
 import drops from "./drops.json";
 
 const defaultImage = require("../../assets/images/default.png");
@@ -153,9 +153,3 @@ export const catalogue: Nft[] = drops.map(({ coordinate, ...drop }) => ({
   ...copy[drop.id],
   location: { ...copy[drop.id].location, coordinate },
 }));
-
-export const initialWallet: OwnedNft[] = [
-  { id: "11", redeemed: false },
-  { id: "6", redeemed: false },
-  { id: "7", redeemed: true },
-];

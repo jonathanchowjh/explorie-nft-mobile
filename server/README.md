@@ -6,7 +6,7 @@ chain, so it needs no keys, accounts or network.
 
 ```sh
 npm install
-npm start   # prints a wallet address for the app and each drop's QR poster contents
+npm start   # prints the demo wallet address and each drop's QR poster contents
 npm test
 ```
 
@@ -33,6 +33,16 @@ It returns `201 { txHash, unit }`, or `400`, `403`, `404` or `409` with `{ error
 
 A drop's QR poster holds `explorie:<drop id>:<code>`, which the app's scanner reads.
 
+`GET /wallet/:address` lists the Explorie NFTs the address holds on-chain, in the order they were minted:
+`{ nfts: [{ unit, dropId, redeemed }] }`. Holdings come from the chain, so an NFT the user sends elsewhere leaves
+their wallet. The server only adds which drop each NFT came from and whether it was redeemed.
+
+`POST /redemptions` with `{ address, unit }` marks a voucher redeemed. The address must hold it. Returns `201`, or
+`400`, `403`, `404` or `409` with `{ error }`.
+
+On start-up the server mints the original app's demo wallet to a fixed demo address (or `DEMO_ADDRESS`): Etherials,
+Pop UP, and Chef's special already redeemed. It does this through its own API, so the seed passes the same checks.
+
 The server listens on all interfaces, so a phone on the same network can reach it.
 
 The on-chain policy enforces the rest independently of the server: one token per mint, the issuer's signature, and a
@@ -41,7 +51,10 @@ contract rejects them.
 
 ## Limits
 
-- **State is in memory**, both the chain and the record of claims, so it resets on restart.
+- **State is in memory**: the chain, the claims, which drop each NFT came from, and redemptions. It all resets on
+  restart.
+- **Redemptions aren't authenticated.** Anyone who knows an address and a voucher it holds can redeem it, because the
+  app has no key to sign with. A wallet that can sign (CIP-8 `signData`) would prove ownership.
 - **To run on a real network**, give `Lucid` a Blockfrost provider and the issuer's key from the environment instead of
   the emulator in `src/main.ts`. `Minter` and the API don't change.
 - **The drops come from the app's [drops.json](../mobile/src/data/drops.json)**, so both sides always agree on ids and

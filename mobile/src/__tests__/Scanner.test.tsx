@@ -2,6 +2,7 @@ import React from "react";
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import App from "../App";
+import { FakeServer } from "../../test/FakeServer";
 
 // Jest only lets mock factories use variables whose names start with "mock".
 let mockPermission = { granted: true, canAskAgain: true };
@@ -28,11 +29,7 @@ jest.mock(
   () => jest.requireActual<{ default: object }>("react-native-safe-area-context/jest/mock").default,
 );
 
-const fetchMock = jest.fn<typeof fetch>();
-
-function serverAnswers(status: number, body: object) {
-  fetchMock.mockResolvedValue({ ok: status < 300, status, json: () => Promise.resolve(body) } as Response);
-}
+let server: FakeServer;
 
 async function openScanner() {
   await render(<App />);
@@ -58,26 +55,23 @@ describe("Scanner", () => {
     mockPermission = { granted: true, canAskAgain: true };
     mockOnScan = undefined;
     mockLocationGranted = true;
-    process.env.EXPO_PUBLIC_WALLET_ADDRESS = "addr_test1demo";
-    fetchMock.mockReset();
-    globalThis.fetch = fetchMock as typeof fetch;
+    server = new FakeServer();
+    server.install();
   });
 
   it("claims the drop in the QR code, from where the phone is", async () => {
     jest.useFakeTimers();
-    serverAnswers(201, { txHash: "ab", unit: "cd" });
     await openScanner();
     await scan("explorie:5:0123456789abcdef");
     expect(await screen.findByText("Congrats!")).toBeTruthy();
 
-    const [url, init] = fetchMock.mock.calls[0];
-    expect(url).toMatch(/:8787\/claims$/);
-    expect(JSON.parse(init?.body as string)).toEqual({
+    expect(server.fetch.mock.calls.some(([url]) => /:8787\/claims$/.test(url))).toBe(true);
+    expect(server.claims).toEqual([{
       dropId: "5",
       code: "0123456789abcdef",
       address: "addr_test1demo",
       location: madisonSquareGarden,
-    });
+    }]);
 
     await backHome();
     expect(screen.getByText("4 NFTs collected")).toBeTruthy();
@@ -86,7 +80,7 @@ describe("Scanner", () => {
 
   it("shows the server's reason when it refuses the claim", async () => {
     jest.useFakeTimers();
-    serverAnswers(403, { error: "Too far from the drop" });
+    server.claimRefusal = { status: 403, body: { error: "Too far from the drop" } };
     await openScanner();
     await scan("explorie:5:0123456789abcdef");
     expect(await screen.findByText("Woopsy!")).toBeTruthy();
@@ -98,8 +92,8 @@ describe("Scanner", () => {
   });
 
   it("says so when the server can't be reached", async () => {
-    fetchMock.mockRejectedValue(new TypeError("Network request failed"));
     await openScanner();
+    server.unreachable = true;
     await scan("explorie:5:0123456789abcdef");
     expect(await screen.findByText("Couldn't reach the Explorie server.")).toBeTruthy();
   });
@@ -109,7 +103,7 @@ describe("Scanner", () => {
     await openScanner();
     await scan("explorie:5:0123456789abcdef");
     expect(await screen.findByText("Explorie needs your location to check you're at the drop.")).toBeTruthy();
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(server.claims).toEqual([]);
   });
 
   it("doesn't call the server without a wallet address", async () => {
@@ -117,14 +111,14 @@ describe("Scanner", () => {
     await openScanner();
     await scan("explorie:5:0123456789abcdef");
     expect(await screen.findByText("This app has no wallet address set up.")).toBeTruthy();
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(server.claims).toEqual([]);
   });
 
   it("acts on only the first of a burst of scan events, and rejects a bare NFT id", async () => {
     await openScanner();
     await scan("5", "explorie:5:0123456789abcdef");
     expect(await screen.findByText("That QR code isn't an Explorie NFT.")).toBeTruthy();
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(server.claims).toEqual([]);
   });
 
   it("offers Settings when camera access is permanently denied", async () => {

@@ -1,7 +1,8 @@
 import React from "react";
-import { describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import App from "../App";
+import { FakeServer } from "../../test/FakeServer";
 
 // Scanner tests cover the camera; here it only needs to stand in for the screen.
 jest.mock("expo-camera", () => ({ useCameraPermissions: () => [null, jest.fn()], CameraView: () => null }));
@@ -23,12 +24,27 @@ async function pressLast(label: string) {
 }
 
 describe("App", () => {
+  let server: FakeServer;
+  beforeEach(() => {
+    server = new FakeServer();
+    server.install();
+  });
+
   it("opens on Home with the three NFT sections", async () => {
     await render(<App />);
     expect(await screen.findByText("Popular NFTs")).toBeTruthy();
     expect(screen.getByText("Vouchers Near Me")).toBeTruthy();
     expect(screen.getByText("Collectables Near Me")).toBeTruthy();
-    expect(screen.getByText("3 NFTs collected")).toBeTruthy();
+    // The wallet comes from the server.
+    expect(await screen.findByText("3 NFTs collected")).toBeTruthy();
+  });
+
+  it("shows why the wallet couldn't load", async () => {
+    server.unreachable = true;
+    await render(<App />);
+    await pressLast("Wallet");
+    expect(await screen.findByText("Couldn't reach the Explorie server.")).toBeTruthy();
+    expect(screen.getAllByText("Nothing Here")).toHaveLength(2);
   });
 
   it("keeps history through header and footer links, so Back works", async () => {
@@ -79,6 +95,7 @@ describe("App", () => {
     await fireEvent.press(await screen.findByText("Pop UP by Reggie Watts"));
     expect(await screen.findByText("Redeemed")).toBeTruthy();
     expect(screen.queryByText("Redeem")).toBeNull();
+    expect(server.held.find((h) => h.dropId === "6")?.redeemed).toBe(true);
     jest.useRealTimers();
   });
 });

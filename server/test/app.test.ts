@@ -112,6 +112,73 @@ describe("POST /claims", () => {
   });
 });
 
+function wallet(address = user.address) {
+  return app.request(`/wallet/${address}`);
+}
+
+function redeem(unit: string, address = user.address) {
+  return app.request("/redemptions", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ address, unit }),
+  });
+}
+
+describe("GET /wallet/:address", () => {
+  test("lists the address's NFTs in the order they were minted", async () => {
+    const chef = drops.find((d) => d.id === "7")!;
+    const first = (await (await claim()).json()).unit;
+    const second = (await (await claim({ dropId: chef.id, code: claimCode(SECRET, chef.id), location: chef.coordinate })).json()).unit;
+
+    assert.deepEqual(await (await wallet()).json(), {
+      nfts: [
+        { unit: first, dropId: "6", redeemed: false },
+        { unit: second, dropId: "7", redeemed: false },
+      ],
+    });
+  });
+
+  test("follows the NFT on-chain when the holder sends it on", async () => {
+    const { unit } = await (await claim()).json();
+    const userLucid = await Lucid(emulator, "Custom");
+    userLucid.selectWallet.fromPrivateKey(user.privateKey);
+    const tx = await userLucid.newTx().pay.ToAddress(issuer.address, { [unit]: 1n }).complete();
+    await userLucid.awaitTx(await (await tx.sign.withWallet().complete()).submit());
+
+    assert.deepEqual((await (await wallet()).json()).nfts, []);
+    assert.equal((await (await wallet(issuer.address)).json()).nfts[0].unit, unit);
+  });
+
+  test("rejects an address on another network", async () => {
+    assert.equal((await wallet("addr_test1nope")).status, 400);
+  });
+});
+
+describe("POST /redemptions", () => {
+  test("marks a held voucher redeemed, once", async () => {
+    const { unit } = await (await claim()).json();
+    assert.equal((await redeem(unit)).status, 201);
+    assert.deepEqual((await (await wallet()).json()).nfts, [{ unit, dropId: "6", redeemed: true }]);
+    assert.equal((await redeem(unit)).status, 409);
+  });
+
+  test("rejects an unknown NFT, a collectable, and an address that doesn't hold it", async () => {
+    const etherials = drops.find((d) => d.id === "11")!;
+    const voucher = (await (await claim()).json()).unit;
+    const collectable = (
+      await (await claim({ dropId: etherials.id, code: claimCode(SECRET, etherials.id), location: etherials.coordinate })).json()
+    ).unit;
+
+    assert.equal((await redeem(`${minter.policyId}00`)).status, 404);
+    assert.equal((await redeem(collectable)).status, 400);
+    assert.equal((await redeem(voucher, issuer.address)).status, 403);
+    assert.deepEqual(
+      (await (await wallet()).json()).nfts.map((n: { redeemed: boolean }) => n.redeemed),
+      [false, false],
+    );
+  });
+});
+
 describe("the on-chain policy", () => {
   const issuerKeyHash = () => paymentCredentialOf(issuer.address).hash;
 

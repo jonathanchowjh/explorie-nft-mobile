@@ -62,9 +62,9 @@ npm install
 CLAIM_RADIUS_METRES=20000000 npm start   # the drops are in Manhattan; a wide radius lets you claim from anywhere
 ```
 
-It prints a wallet address and each drop's QR poster contents, such as `explorie:5:e7e7b1c205e7ee6d`. Put the address
-in `mobile/.env.local` (see [mobile/.env.example](mobile/.env.example)), start the app, and scan a QR code made from
-one of the poster lines. The app sends the code and the phone's location to the server, which mints the NFT on its
+It prints each drop's QR poster contents, such as `explorie:5:e7e7b1c205e7ee6d`, and mints a demo wallet of three
+NFTs. Copy [mobile/.env.example](mobile/.env.example) to `mobile/.env.local` to use that wallet, start the app, and
+scan a QR code made from one of the poster lines. The app sends the code and the phone's location to the server, which mints the NFT on its
 local emulator chain.
 
 Checks, from `mobile/`:

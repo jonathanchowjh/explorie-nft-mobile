@@ -4,7 +4,7 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import type { ScreenProps } from "../navigation";
 import { catalogue } from "../data/seed";
 import { useNfts } from "../state/NftStore";
-import { parseClaimQr } from "../claims";
+import { parseClaimQr } from "../api";
 import { colors } from "../theme";
 import { Button } from "../components/ui";
 

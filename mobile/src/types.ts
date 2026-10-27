@@ -17,7 +17,5 @@ export type Nft = {
   };
 };
 
-// An NFT in the user's wallet, in the order it was collected.
-export type OwnedNft = { id: string; redeemed: boolean };
-
-export type WalletNft = Nft & { redeemed: boolean };
+// An NFT the wallet holds, in the order it was minted. `unit` is its on-chain id.
+export type WalletNft = Nft & { unit: string; redeemed: boolean };

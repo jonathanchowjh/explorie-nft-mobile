@@ -10,8 +10,9 @@ npm run typecheck
 npm test
 ```
 
-Collecting an NFT needs the [claim server](../server) running and a wallet address in `.env.local`; see
-[.env.example](.env.example). The scanner reads a drop's QR poster (`explorie:<drop id>:<claim code>`, printed by the
+The app needs the [claim server](../server) running, and a wallet address in `.env.local`: copy
+[.env.example](.env.example), which has the server's demo address. The wallet shows what that address holds on-chain,
+as the server reports it, and redeeming a voucher records it on the server. The scanner reads a drop's QR poster (`explorie:<drop id>:<claim code>`, printed by the
 server), then sends the code and the phone's location to the server, which mints the NFT to that address.
 
 The app finds the server on port 8787 of the machine running Expo, so a phone on the same Wi-Fi reaches it without

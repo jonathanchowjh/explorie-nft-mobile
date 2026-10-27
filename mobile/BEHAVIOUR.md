@@ -137,4 +137,10 @@ success after 0.5 s; a "Tap to Scan your NFT" button re-arms scanning.
   so Cyber kongz is no longer special.
 - **Wallet address:** comes from `EXPO_PUBLIC_WALLET_ADDRESS`. The banner shows it and copies it, or shows "No wallet
   address" when it's unset.
+- **Wallet:** loaded from the server at launch, after each claim or redemption, and on every visit to Wallet. It holds
+  what the address holds on-chain, so the app no longer has a built-in starting wallet. The server mints the old one
+  (Etherials, Pop UP, and Chef's special redeemed) to its demo address. If the wallet can't load, Wallet shows why,
+  above empty sections, and Home counts 0 NFTs collected.
+- **Redeeming a voucher:** the server records it. The button shows "Redeeming…" while it waits. If the server refuses,
+  Info shows its reason instead of "Voucher Redeemed!".
 - **Drop data:** ids, titles, kinds and coordinates live in `src/data/drops.json`, which the server reads too.

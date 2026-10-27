@@ -44,6 +44,12 @@ export class Minter {
     }
   }
 
+  // The Explorie NFTs the address holds on-chain.
+  async unitsAt(address: string): Promise<string[]> {
+    const utxos = await this.#lucid.utxosAt(address);
+    return utxos.flatMap((u) => Object.keys(u.assets)).filter((unit) => unit.startsWith(this.policyId));
+  }
+
   mint(address: string, drop: Drop): Promise<{ txHash: string; unit: string }> {
     const minted = this.#queue.then(() => this.#mintNow(address, drop));
     this.#queue = minted.catch(() => {});

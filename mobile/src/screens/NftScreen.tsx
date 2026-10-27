@@ -12,6 +12,7 @@ export default function NftScreen({ navigation, route }: ScreenProps<"Nft">) {
   const { id } = route.params;
   const nft = wallet.find((n) => n.id === id) ?? { ...findNft(id), redeemed: false };
   const [showQr, setShowQr] = React.useState(false);
+  const [redeeming, setRedeeming] = React.useState(false);
 
   return (
     <Screen>
@@ -30,10 +31,17 @@ export default function NftScreen({ navigation, route }: ScreenProps<"Nft">) {
       )}
       {nft.kind === "voucher" && !nft.redeemed && (
         <Button
-          title="Redeem"
-          onPress={() => {
-            redeem(nft.id);
-            navigation.navigate("Info", { id: nft.id, success: true, message: "Voucher Redeemed!" });
+          title={redeeming ? "Redeeming…" : "Redeem"}
+          disabled={redeeming}
+          onPress={async () => {
+            setRedeeming(true);
+            const result = await redeem(nft.id);
+            setRedeeming(false);
+            navigation.navigate("Info", {
+              id: nft.id,
+              success: result.ok,
+              message: result.ok ? "Voucher Redeemed!" : result.message,
+            });
           }}
           style={[styles.wide, styles.redeem]}
           textStyle={styles.lightText}

@@ -1,30 +1,17 @@
 import { describe, expect, it } from "@jest/globals";
-import { collect, findNft, redeem, searchNfts } from "../state/NftStore";
-import { parseClaimQr } from "../claims";
+import { findNft, searchNfts, toWallet } from "../state/NftStore";
+import { parseClaimQr } from "../api";
 
-describe("collect", () => {
-  it("adds an NFT to the end of the wallet, unredeemed", () => {
-    expect(collect([{ id: "1", redeemed: true }], "2")).toEqual([
-      { id: "1", redeemed: true },
-      { id: "2", redeemed: false },
+describe("toWallet", () => {
+  it("keeps the server's order and skips drops the app doesn't know", () => {
+    const wallet = toWallet([
+      { unit: "b", dropId: "6", redeemed: true },
+      { unit: "x", dropId: "99", redeemed: false },
+      { unit: "a", dropId: "1", redeemed: false },
     ]);
-  });
-
-  it("ignores an NFT that is already owned", () => {
-    const owned = [{ id: "1", redeemed: true }];
-    expect(collect(owned, "1")).toBe(owned);
-  });
-});
-
-describe("redeem", () => {
-  it("marks only that NFT redeemed and keeps wallet order", () => {
-    const owned = [
-      { id: "6", redeemed: false },
-      { id: "11", redeemed: false },
-    ];
-    expect(redeem(owned, "6")).toEqual([
-      { id: "6", redeemed: true },
-      { id: "11", redeemed: false },
+    expect(wallet.map((n) => [n.title, n.unit, n.redeemed])).toEqual([
+      ["Pop UP by Reggie Watts", "b", true],
+      ["0N1 Force #2819", "a", false],
     ]);
   });
 });
