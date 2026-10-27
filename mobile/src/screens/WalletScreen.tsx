@@ -3,12 +3,14 @@ import * as Clipboard from "expo-clipboard";
 import type { ScreenProps } from "../navigation";
 import { profile } from "../data/seed";
 import { useNfts } from "../state/NftStore";
+import { walletAddress } from "../claims";
 import { Screen } from "../components/Screen";
 import { Banner } from "../components/ui";
 import { NftCards } from "../components/nft";
 
 export default function WalletScreen({ navigation }: ScreenProps<"Wallet">) {
   const { wallet } = useNfts();
+  const address = walletAddress();
   const sections = [
     { title: "My Vouchers", nfts: wallet.filter((n) => n.kind === "voucher") },
     { title: "My Collectables", nfts: wallet.filter((n) => n.kind === "collectable") },
@@ -22,9 +24,9 @@ export default function WalletScreen({ navigation }: ScreenProps<"Wallet">) {
         gradient={["rgba(255,0,0,0.8)", "rgba(255,0,0,0.4)"]}
         actions={[
           {
-            title: profile.walletAddress,
+            title: address ?? "No wallet address",
             icon: "clone",
-            onPress: () => Clipboard.setStringAsync(profile.walletAddress),
+            onPress: () => address && Clipboard.setStringAsync(address),
           },
           { title: "Settings", onPress: () => navigation.navigate("Settings", undefined, { pop: true }) },
         ]}

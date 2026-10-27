@@ -1,5 +1,6 @@
 import React from "react";
 import { catalogue, initialWallet } from "../data/seed";
+import { claimDrop, type ClaimResult } from "../claims";
 import type { Nft, OwnedNft, WalletNft } from "../types";
 
 export function findNft(id: string): Nft {
@@ -26,8 +27,8 @@ export function redeem(owned: OwnedNft[], id: string): OwnedNft[] {
 
 type NftStore = {
   wallet: WalletNft[];
-  // Collects the NFT if the user is in range of it; returns whether it was collected.
-  collect: (id: string) => boolean;
+  // Asks the server to mint the drop's NFT, and adds it to the wallet if it did.
+  collect: (id: string, code: string) => Promise<ClaimResult>;
   redeem: (id: string) => void;
 };
 
@@ -38,10 +39,10 @@ export function NftProvider({ children }: { children: React.ReactNode }) {
   const store = React.useMemo<NftStore>(
     () => ({
       wallet: owned.map((o) => ({ ...findNft(o.id), redeemed: o.redeemed })),
-      collect: (id) => {
-        const inRange = findNft(id).inRange;
-        if (inRange) setOwned((current) => collect(current, id));
-        return inRange;
+      collect: async (id, code) => {
+        const result = await claimDrop(id, code);
+        if (result.ok) setOwned((current) => collect(current, id));
+        return result;
       },
       redeem: (id) => setOwned((current) => redeem(current, id)),
     }),

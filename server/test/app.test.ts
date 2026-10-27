@@ -95,6 +95,12 @@ describe("POST /claims", () => {
     assert.equal((await unitsHeldBy(user.address)).length, 2);
   });
 
+  test("accepts a distant phone when the server is started with a wider radius", async () => {
+    app = buildApp(minter, SECRET, 20_000_000);
+    const singapore = { latitude: 1.2966, longitude: 103.7764 };
+    assert.equal((await claim({ location: singapore })).status, 201);
+  });
+
   test("rejects a wrong code, a distant phone, a bad address, an unknown drop and a bad body", async () => {
     const away = { latitude: popUp.coordinate.latitude + 0.01, longitude: popUp.coordinate.longitude };
     assert.equal((await claim({ code: claimCode(SECRET, "5") })).status, 403);

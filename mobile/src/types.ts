@@ -7,8 +7,6 @@ export type Nft = {
   title: string;
   kind: NftKind;
   image: ImageSourcePropType;
-  // Stands in for a real location check: whether the user is close enough to collect it.
-  inRange: boolean;
   distance: string;
   rating: string;
   location: {

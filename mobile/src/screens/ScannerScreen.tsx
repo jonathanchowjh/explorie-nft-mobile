@@ -1,16 +1,18 @@
 import React from "react";
-import { Linking, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Linking, StyleSheet, Text, View } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import type { ScreenProps } from "../navigation";
 import { catalogue } from "../data/seed";
 import { useNfts } from "../state/NftStore";
+import { parseClaimQr } from "../claims";
 import { colors } from "../theme";
 import { Button } from "../components/ui";
 
-// A valid code is an NFT's id, e.g. a QR code containing "5".
+// Scans a drop's QR poster and claims its NFT.
 export default function ScannerScreen({ navigation }: ScreenProps<"Scanner">) {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = React.useState(false);
+  const [claiming, setClaiming] = React.useState(false);
   // The camera can report a code several times before the re-render turns scanning off.
   const handled = React.useRef(false);
   const { collect } = useNfts();
@@ -31,16 +33,27 @@ export default function ScannerScreen({ navigation }: ScreenProps<"Scanner">) {
     );
   }
 
-  const onScan = (data: string) => {
+  if (claiming) {
+    return (
+      <Message text="Claiming your NFT…">
+        <ActivityIndicator color={colors.brand} />
+      </Message>
+    );
+  }
+
+  const onScan = async (data: string) => {
     if (handled.current) return;
     handled.current = true;
     setScanned(true);
-    const nft = catalogue.find((n) => n.id === data);
-    if (!nft) {
+    const qr = parseClaimQr(data);
+    if (!qr || !catalogue.some((n) => n.id === qr.dropId)) {
       navigation.navigate("Info", { success: false, message: "That QR code isn't an Explorie NFT." });
       return;
     }
-    navigation.navigate("Info", { id: nft.id, success: collect(nft.id) });
+    setClaiming(true);
+    const result = await collect(qr.dropId, qr.code);
+    setClaiming(false);
+    navigation.navigate("Info", { id: qr.dropId, success: result.ok, message: result.ok ? undefined : result.message });
   };
 
   return (

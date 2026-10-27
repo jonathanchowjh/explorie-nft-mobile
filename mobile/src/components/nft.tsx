@@ -95,7 +95,13 @@ export function NftMapCard({ nft, onCollect, onDetails }: {
         </View>
       </View>
       <View style={styles.mapCardButtons}>
-        <Button title="Collect" icon="check" iconColor={colors.brand} onPress={onCollect} style={styles.collectButton} />
+        <Button
+          title="Scan to collect"
+          icon="qrcode"
+          iconColor={colors.brand}
+          onPress={onCollect}
+          style={styles.collectButton}
+        />
         <Button icon="info-circle" label="Details" iconColor="white" onPress={onDetails} style={styles.infoButton} />
       </View>
     </View>

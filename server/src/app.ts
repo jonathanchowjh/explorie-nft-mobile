@@ -20,13 +20,13 @@ function parseClaim(body: unknown): Claim | null {
 }
 
 // A claim mints a drop's NFT to the user's address. It needs the code from the
-// drop's QR poster and a location within CLAIM_RADIUS_METRES of the drop, and
-// each address can claim a drop once. Claims are kept in memory.
-export function buildApp(minter: Minter, claimSecret: string) {
+// drop's QR poster and a location within radiusMetres of the drop, and each
+// address can claim a drop once. Claims are kept in memory.
+export function buildApp(minter: Minter, claimSecret: string, radiusMetres = CLAIM_RADIUS_METRES) {
   const claimed = new Set<string>();
   const app = new Hono();
 
-  app.get("/drops", (c) => c.json({ policyId: minter.policyId, radiusMetres: CLAIM_RADIUS_METRES, drops }));
+  app.get("/drops", (c) => c.json({ policyId: minter.policyId, radiusMetres, drops }));
 
   app.post("/claims", async (c) => {
     const claim = parseClaim(await c.req.json().catch(() => null));
@@ -39,7 +39,7 @@ export function buildApp(minter: Minter, claimSecret: string) {
       return c.json({ error: "Not a Cardano address on this network" }, 400);
     }
     if (!isClaimCode(claimSecret, drop.id, claim.code)) return c.json({ error: "Wrong claim code" }, 403);
-    if (distanceMetres(claim.location, drop.coordinate) > CLAIM_RADIUS_METRES) {
+    if (distanceMetres(claim.location, drop.coordinate) > radiusMetres) {
       return c.json({ error: "Too far from the drop" }, 403);
     }
 

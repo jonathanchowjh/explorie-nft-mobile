@@ -4,7 +4,7 @@ import MapView, { Marker } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import type { ScreenProps } from "../navigation";
 import { catalogue } from "../data/seed";
-import { findNft, useNfts } from "../state/NftStore";
+import { findNft } from "../state/NftStore";
 import { NftMapCard } from "../components/nft";
 
 const CENTER = { latitude: 40.7496569, longitude: -73.9930029 };
@@ -13,7 +13,6 @@ const pointer = require("../../assets/images/pointer.png");
 
 export default function MapScreen({ navigation, route }: ScreenProps<"Map">) {
   const { width, height } = useWindowDimensions();
-  const { collect } = useNfts();
   const [selectedId, setSelectedId] = React.useState(route.params?.id ?? catalogue[0].id);
   const selected = findNft(selectedId);
 
@@ -38,7 +37,7 @@ export default function MapScreen({ navigation, route }: ScreenProps<"Map">) {
       <SafeAreaView edges={["bottom"]}>
         <NftMapCard
           nft={selected}
-          onCollect={() => navigation.navigate("Info", { id: selected.id, success: collect(selected.id) })}
+          onCollect={() => navigation.navigate("Scanner", undefined, { pop: true })}
           onDetails={() => navigation.navigate("Redeem", { id: selected.id })}
         />
       </SafeAreaView>

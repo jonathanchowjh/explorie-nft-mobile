@@ -1,5 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 import { collect, findNft, redeem, searchNfts } from "../state/NftStore";
+import { parseClaimQr } from "../claims";
 
 describe("collect", () => {
   it("adds an NFT to the end of the wallet, unredeemed", () => {
@@ -41,5 +42,17 @@ describe("searchNfts", () => {
 describe("findNft", () => {
   it("throws for an unknown id", () => {
     expect(() => findNft("nope")).toThrow("No NFT with id nope");
+  });
+});
+
+describe("parseClaimQr", () => {
+  it("reads the drop id and claim code from a poster", () => {
+    expect(parseClaimQr("explorie:10:0123456789abcdef")).toEqual({ dropId: "10", code: "0123456789abcdef" });
+  });
+
+  it("rejects anything else", () => {
+    expect(parseClaimQr("5")).toBeNull();
+    expect(parseClaimQr("https://example.com")).toBeNull();
+    expect(parseClaimQr("explorie:5:")).toBeNull();
   });
 });

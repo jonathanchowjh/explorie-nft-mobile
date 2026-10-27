@@ -35,6 +35,12 @@
           "cameraPermission": "Explorie uses the camera to scan NFT QR codes."
         }
       ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Explorie uses your location to check you're at a drop when you claim its NFT."
+        }
+      ],
       "expo-font",
       "expo-asset"
     ]

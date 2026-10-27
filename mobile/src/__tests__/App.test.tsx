@@ -3,6 +3,8 @@ import { describe, expect, it, jest } from "@jest/globals";
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import App from "../App";
 
+// Scanner tests cover the camera; here it only needs to stand in for the screen.
+jest.mock("expo-camera", () => ({ useCameraPermissions: () => [null, jest.fn()], CameraView: () => null }));
 // The map is a native view with no JS fallback; these tests don't exercise it.
 jest.mock("react-native-maps", () => ({ __esModule: true, default: () => null, Marker: () => null }));
 // Icons load their font file on mount, which Jest's asset stubs can't serve.
@@ -43,36 +45,19 @@ describe("App", () => {
     expect(screen.getByText("Popular NFTs", { includeHiddenElements: true })).toBeTruthy();
   });
 
-  it("collects an in-range NFT from the map card", async () => {
-    jest.useFakeTimers();
+  it("collects from the map card by opening the scanner", async () => {
     await render(<App />);
-
     await fireEvent.press((await screen.findAllByText("0N1 Force #2819"))[0]);
-    await pressLast("Collect");
-    expect(await screen.findByText("Congrats!")).toBeTruthy();
-
-    await act(async () => {
-      jest.advanceTimersByTime(5000);
-    });
-    expect(screen.getByText("4 NFTs collected")).toBeTruthy();
-    jest.useRealTimers();
+    await pressLast("Scan to collect");
+    expect(screen.getByText("Requesting camera permission")).toBeTruthy();
   });
 
-  it("collects from the details screen, but not when out of range", async () => {
-    jest.useFakeTimers();
+  it("collects from the details screen by opening the scanner", async () => {
     await render(<App />);
-
-    // Cyber kongz is the one NFT the user isn't close enough to.
-    await fireEvent.press((await screen.findAllByText("Cyber kongz #0000"))[0]);
+    await fireEvent.press((await screen.findAllByText("0N1 Force #2819"))[0]);
     await pressLast("Details");
-    await pressLast("Collect");
-    expect(await screen.findByText("Woopsy!")).toBeTruthy();
-
-    await act(async () => {
-      jest.advanceTimersByTime(5000);
-    });
-    expect(screen.getByText("3 NFTs collected")).toBeTruthy();
-    jest.useRealTimers();
+    await pressLast("Scan to collect");
+    expect(screen.getByText("Requesting camera permission")).toBeTruthy();
   });
 
   it("redeems a voucher from the wallet and shows it as redeemed", async () => {

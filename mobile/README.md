@@ -10,5 +10,14 @@ npm run typecheck
 npm test
 ```
 
-In the scanner, a QR code containing an NFT's id (for example `5`) collects that NFT. Android builds outside Expo Go
-need `GOOGLE_MAPS_ANDROID_API_KEY` set, or the map renders blank.
+Collecting an NFT needs the [claim server](../server) running and a wallet address in `.env.local`; see
+[.env.example](.env.example). The scanner reads a drop's QR poster (`explorie:<drop id>:<claim code>`, printed by the
+server), then sends the code and the phone's location to the server, which mints the NFT to that address.
+
+The app finds the server on port 8787 of the machine running Expo, so a phone on the same Wi-Fi reaches it without
+setup. Set `EXPO_PUBLIC_SERVER_URL` to use another server.
+
+Android builds outside Expo Go need `GOOGLE_MAPS_ANDROID_API_KEY` set, or the map renders blank.
+
+`package.json` overrides `zod` to 4.x: Expo's CLI pins 3.x, which has a high-severity advisory, and only uses zod
+features that 4.x keeps.
