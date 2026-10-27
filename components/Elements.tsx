@@ -1,10 +1,8 @@
-import React, { useState } from "react";
-import { StyleSheet, Button, Image } from "react-native";
+import React from "react";
+import { StyleSheet, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { View, Text, TextInput, ScrollView, Pressable } from "../components/Themed";
-import { RootTabScreenProps } from "../types";
-import { shadow, noShadow } from "../constants/Styles"
-import { reshape2D } from "../constants/Functions"
+import { View, Text, TextInput, Pressable } from "../components/Themed";
+import { shadow } from "../constants/Styles"
 import * as Progress from 'react-native-progress';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import LogoLabel from "../assets/images/logo-label.png"
