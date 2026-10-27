@@ -1,3 +1,5 @@
 # The testnet server's records (DATA_FILE).
 *.db
 *.db-*
+# Written on start-up with that server's claim secret.
+posters/

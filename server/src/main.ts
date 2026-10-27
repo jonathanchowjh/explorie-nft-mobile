@@ -2,9 +2,10 @@ import { randomBytes } from "node:crypto";
 import { serve } from "@hono/node-server";
 import { Blockfrost, Emulator, Lucid, generateEmulatorAccountFromPrivateKey } from "@lucid-evolution/lucid";
 import { buildApp } from "./app.ts";
-import { claimCode } from "./claims.ts";
+import { claimCode, posterText } from "./claims.ts";
 import { CLAIM_RADIUS_METRES, drops } from "./drops.ts";
 import { Minter } from "./Minter.ts";
+import { writePosters } from "./posters.ts";
 
 // Two modes. By default, an in-memory Cardano chain (Lucid's emulator) with a
 // funded issuer and a demo wallet: nothing touches a real network, and
@@ -53,6 +54,10 @@ if (!projectId) {
   }
 }
 
+// Printable posters, made with this server's secret so their codes work here.
+const postersDir = new URL("../posters", import.meta.url).pathname;
+await writePosters(postersDir, claimSecret, drops);
+
 // Listens on every interface, so a phone on the same network can reach it.
 serve({ fetch: app.fetch, port, hostname: "0.0.0.0" }, () => {
   console.log(`Explorie server on port ${port} (${projectId ? `Preview testnet, records in ${dataFile}` : "local emulator chain"})`);
@@ -63,8 +68,8 @@ serve({ fetch: app.fetch, port, hostname: "0.0.0.0" }, () => {
     console.log(`For the app's .env.local, the demo user, who starts with 3 NFTs:`);
     console.log(`  EXPO_PUBLIC_WALLET_ADDRESS=${demoAddress}`);
   }
-  console.log("QR poster contents:");
-  for (const drop of drops) console.log(`  explorie:${drop.id}:${claimCode(claimSecret, drop.id)}  ${drop.title}`);
+  console.log(`QR posters in ${postersDir}, reading:`);
+  for (const drop of drops) console.log(`  ${posterText(claimSecret, drop.id)}  ${drop.title}`);
 });
 
 async function localEmulator() {

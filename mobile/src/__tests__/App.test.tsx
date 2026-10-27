@@ -79,6 +79,17 @@ describe("App", () => {
     expect(await screen.findByText("590 m")).toBeTruthy();
   });
 
+  it("opens a drop the wallet already holds instead of the scanner", async () => {
+    await render(<App />);
+    expect(await screen.findByText("3 NFTs collected")).toBeTruthy();
+    await pressLast("Search");
+    await fireEvent.changeText(screen.getByPlaceholderText("Search"), "Etherials");
+    await fireEvent.press(await screen.findByText("Etherials meetup @ NFT.NYC"));
+
+    await pressLast("View in wallet");
+    expect(await screen.findByText("Marketplace")).toBeTruthy();
+  });
+
   it("collects from the map card by opening the scanner", async () => {
     await render(<App />);
     await fireEvent.press((await screen.findAllByText("0N1 Force #2819"))[0]);

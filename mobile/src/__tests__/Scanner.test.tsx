@@ -121,6 +121,23 @@ describe("Scanner", () => {
     expect(server.claims).toEqual([]);
   });
 
+  it("claims a typed-in code, for a poster the camera can't read", async () => {
+    await openScanner();
+    await fireEvent.changeText(screen.getByLabelText("Poster code"), " explorie:5:0123456789abcdef ");
+    await fireEvent.press(screen.getByText("Claim"));
+    expect(await screen.findByText("Congrats!")).toBeTruthy();
+    expect(screen.getByText("Added to your wallet: Nets vs. Knicks game ticket (front seats)!")).toBeTruthy();
+    expect(server.claims.map((c) => c.code)).toEqual(["0123456789abcdef"]);
+  });
+
+  it("takes a typed-in code without camera access", async () => {
+    mockPermission = { granted: false, canAskAgain: false };
+    await openScanner();
+    await fireEvent.changeText(screen.getByLabelText("Poster code"), "explorie:5:0123456789abcdef");
+    await fireEvent(screen.getByLabelText("Poster code"), "submitEditing");
+    expect(await screen.findByText("Congrats!")).toBeTruthy();
+  });
+
   it("offers Settings when camera access is permanently denied", async () => {
     mockPermission = { granted: false, canAskAgain: false };
     await openScanner();

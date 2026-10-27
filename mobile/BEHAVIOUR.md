@@ -147,3 +147,9 @@ success after 0.5 s; a "Tap to Scan your NFT" button re-arms scanning.
 - **Distances:** the map card ("590 m away") and details screen show the phone's real distance to the drop, updated
   as it moves, instead of a fixed string per NFT. They're hidden until the position is known, or if location access is
   refused. The map shows the user's position.
+- **Typing a code:** the scanner has a field for the line printed under a poster's QR code, for a poster the camera
+  can't read or a device without a camera. It's there even when camera access is refused.
+- **Collected drops:** on the map card and the details screen, a drop the wallet already holds shows "View in wallet",
+  which opens it, instead of "Scan to collect".
+- **Claim message:** a successful claim says "Added to your wallet: `<title>`". It used to say "You redeemed the NFT",
+  which was wrong for a claim and doubled the "!" on titles that end in one.

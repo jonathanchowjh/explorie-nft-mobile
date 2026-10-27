@@ -19,6 +19,11 @@ export function claimCode(secret: string, dropId: string): string {
   return createHmac("sha256", secret).update(dropId).digest("hex").slice(0, 16);
 }
 
+// What a drop's QR poster holds, and what the app's scanner reads.
+export function posterText(secret: string, dropId: string): string {
+  return `explorie:${dropId}:${claimCode(secret, dropId)}`;
+}
+
 export function isClaimCode(secret: string, dropId: string, code: string): boolean {
   const expected = Buffer.from(claimCode(secret, dropId));
   const given = Buffer.from(code);

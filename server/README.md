@@ -6,7 +6,7 @@ chain, so it needs no keys, accounts or network.
 
 ```sh
 npm install
-npm start   # prints the demo wallet address and each drop's QR poster contents
+npm start   # writes the QR posters to posters/ and prints the demo wallet address
 npm test
 ```
 
@@ -44,7 +44,10 @@ A claim needs all of:
 
 It returns `201 { txHash, unit }`, or `400`, `403`, `404` or `409` with `{ error }`.
 
-A drop's QR poster holds `explorie:<drop id>:<code>`, which the app's scanner reads.
+A drop's QR poster holds `explorie:<drop id>:<code>`, which the app's scanner reads. On start-up the server writes a
+printable poster for each drop to `posters/<drop id>.svg`: the title, the QR code, and the same text underneath for
+typing into the app. They're made with the running server's `CLAIM_SECRET`, so they only work with it; locally the
+secret is random unless you set it.
 
 `GET /wallet/:address` lists the Explorie NFTs the address holds on-chain, in the order they were minted:
 `{ nfts: [{ unit, dropId, redeemed }] }`. Holdings come from the chain, so an NFT the user sends elsewhere leaves

@@ -8,7 +8,8 @@
     "ios": "expo start --ios",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
-    "test": "jest"
+    "test": "jest",
+    "test:e2e": "jest --testMatch \"<rootDir>/test/*.e2e.tsx\""
   },
   "jest": {
     "preset": "jest-expo"

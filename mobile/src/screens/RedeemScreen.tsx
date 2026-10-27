@@ -2,7 +2,7 @@ import React from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { ScreenProps } from "../navigation";
-import { findNft } from "../state/NftStore";
+import { findNft, useNfts } from "../state/NftStore";
 import { colors } from "../theme";
 import { Button, Icon } from "../components/ui";
 import { LocationPhoto } from "../components/nft";
@@ -12,6 +12,7 @@ export default function RedeemScreen({ navigation, route }: ScreenProps<"Redeem"
   const nft = findNft(route.params.id);
   const insets = useSafeAreaInsets();
   const position = usePosition();
+  const collected = useNfts().wallet.some((n) => n.id === nft.id);
 
   return (
     <View style={styles.container}>
@@ -44,8 +45,10 @@ export default function RedeemScreen({ navigation, route }: ScreenProps<"Redeem"
         </View>
         <Text style={styles.description}>{nft.location.description}</Text>
         <Button
-          title="Scan to collect"
-          onPress={() => navigation.navigate("Scanner", undefined, { pop: true })}
+          title={collected ? "View in wallet" : "Scan to collect"}
+          onPress={() =>
+            collected ? navigation.navigate("Nft", { id: nft.id }) : navigation.navigate("Scanner", undefined, { pop: true })
+          }
           style={styles.collect}
           textStyle={styles.collectText}
         />

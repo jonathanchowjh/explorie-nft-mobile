@@ -62,9 +62,10 @@ npm install
 CLAIM_RADIUS_METRES=20000000 npm start   # the drops are in Manhattan; a wide radius lets you claim from anywhere
 ```
 
-It prints each drop's QR poster contents, such as `explorie:5:e7e7b1c205e7ee6d`, and mints a demo wallet of three
-NFTs. Copy [mobile/.env.example](mobile/.env.example) to `mobile/.env.local` to use that wallet, start the app, and
-scan a QR code made from one of the poster lines. The app sends the code and the phone's location to the server, which mints the NFT on its
+It mints a demo wallet of three NFTs and writes a QR poster for each drop to `server/posters/`. Copy
+[mobile/.env.example](mobile/.env.example) to `mobile/.env.local` to use that wallet, start the app, and scan a poster
+on screen. On a simulator, which has no camera, type the line printed under the QR code, such as
+`explorie:5:e7e7b1c205e7ee6d`, into the scanner instead. The app sends the code and the phone's location to the server, which mints the NFT on its
 local emulator chain.
 
 Checks, from `mobile/`:
@@ -73,6 +74,7 @@ Checks, from `mobile/`:
 npm run lint
 npm run typecheck
 npm test
+npm run test:e2e   # the app against the real claim server; needs server/ installed
 ```
 
 The contract and claim server have their own instructions in [contracts/README.md](contracts/README.md) and [server/README.md](server/README.md).
