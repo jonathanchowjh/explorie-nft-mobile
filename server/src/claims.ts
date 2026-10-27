@@ -1,0 +1,37 @@
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+
+type Coordinate = { latitude: number; longitude: number };
+
+const EARTH_RADIUS_METRES = 6_371_000;
+
+// Great-circle distance (haversine).
+export function distanceMetres(a: Coordinate, b: Coordinate): number {
+  const rad = (degrees: number) => (degrees * Math.PI) / 180;
+  const dLat = rad(b.latitude - a.latitude);
+  const dLon = rad(b.longitude - a.longitude);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.latitude)) * Math.cos(rad(b.latitude)) * Math.sin(dLon / 2) ** 2;
+  return 2 * EARTH_RADIUS_METRES * Math.asin(Math.sqrt(h));
+}
+
+// The code printed in a drop's QR poster. Only the server knows `secret`,
+// so a code can't be made up without visiting the poster.
+export function claimCode(secret: string, dropId: string): string {
+  return createHmac("sha256", secret).update(dropId).digest("hex").slice(0, 16);
+}
+
+export function isClaimCode(secret: string, dropId: string, code: string): boolean {
+  const expected = Buffer.from(claimCode(secret, dropId));
+  const given = Buffer.from(code);
+  return given.length === expected.length && timingSafeEqual(given, expected);
+}
+
+// The asset name the minting policy requires for an NFT minted by spending
+// this output: SHA3-256 of the output index (one byte) then the transaction id.
+// The same as Lucid's getUniqueTokenName, without its experimental Web Crypto call.
+export function nftName(txHash: string, outputIndex: number): string {
+  if (outputIndex > 255) throw new Error("Output index must fit in one byte");
+  return createHash("sha3-256")
+    .update(Buffer.from([outputIndex]))
+    .update(Buffer.from(txHash, "hex"))
+    .digest("hex");
+}

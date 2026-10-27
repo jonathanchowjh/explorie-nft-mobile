@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Explorie",
+    "slug": "explorie",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "explorie",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splashPage.png",
+          "imageWidth": 300,
+          "resizeMode": "contain",
+          "backgroundColor": "#e9413c"
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Explorie uses the camera to scan NFT QR codes."
+        }
+      ],
+      "expo-font",
+      "expo-asset"
+    ]
+  }
+}
