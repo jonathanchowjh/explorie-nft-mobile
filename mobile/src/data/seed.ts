@@ -1,5 +1,6 @@
 import type { Nft, NftKind } from "../types";
-import drops from "./drops.json";
+// The server owns the drops; metro.config.js lets the app bundle them from there.
+import drops from "../../../server/src/drops.json";
 
 const defaultImage = require("../../assets/images/default.png");
 

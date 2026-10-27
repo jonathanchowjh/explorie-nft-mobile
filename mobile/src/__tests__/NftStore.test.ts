@@ -3,6 +3,19 @@ import { findNft, searchNfts, toWallet } from "../state/NftStore";
 import { parseClaimQr } from "../api";
 
 describe("toWallet", () => {
+  it("shows several of one drop once, as the unredeemed one if there is one", () => {
+    const wallet = toWallet([
+      { unit: "a", dropId: "6", redeemed: true },
+      { unit: "b", dropId: "11", redeemed: false },
+      { unit: "c", dropId: "6", redeemed: false },
+      { unit: "d", dropId: "6", redeemed: false },
+    ]);
+    expect(wallet.map((n) => [n.id, n.unit, n.redeemed])).toEqual([
+      ["6", "c", false],
+      ["11", "b", false],
+    ]);
+  });
+
   it("keeps the server's order and skips drops the app doesn't know", () => {
     const wallet = toWallet([
       { unit: "b", dropId: "6", redeemed: true },

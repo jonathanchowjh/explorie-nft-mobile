@@ -42,7 +42,9 @@ A claim needs all of:
   demo away from Manhattan.
 - **An address on the server's network** that hasn't claimed this drop before.
 
-It returns `201 { txHash, unit }`, or `400`, `403`, `404` or `409` with `{ error }`.
+It returns `201 { txHash, unit }`, or `400`, `403`, `404` or `409` with `{ error }`. If minting fails it returns `502`
+and the drop can be claimed again. If the mint was sent but didn't confirm in time, it returns `504`: the claim stays
+taken, because the NFT may still land, and it shows in the wallet when it does.
 
 A drop's QR poster holds `explorie:<drop id>:<code>`, which the app's scanner reads. On start-up the server writes a
 printable poster for each drop to `posters/<drop id>.svg`: the title, the QR code, and the same text underneath for
@@ -53,10 +55,14 @@ secret is random unless you set it.
 `{ nfts: [{ unit, dropId, redeemed }] }`. Holdings come from the chain, so an NFT the user sends elsewhere leaves
 their wallet. The server only adds which drop each NFT came from and whether it was redeemed.
 
-`POST /redemptions` with `{ address, unit }` marks a voucher redeemed. The address must hold it. Returns `201`, or
+`POST /redemptions` with `{ address, unit, publicKey, signature }` marks a voucher redeemed. The address must hold it,
+and only its owner can redeem it: `publicKey` (hex) must be the address's payment key, and `signature` (hex) its
+ed25519 signature of `explorie:redeem:<unit>`, which the app makes with its wallet key. A bad or missing signature
+gets `401`. Otherwise it returns `201`, or
 `400`, `403`, `404` or `409` with `{ error }`.
 
-Locally, on start-up the server mints the original app's demo wallet to a fixed demo address (or `DEMO_ADDRESS`): Etherials,
+Locally, on start-up the server mints the original app's demo wallet to the address of a fixed demo key (or
+`DEMO_KEY`), whose key is published in the app's `.env.example`: Etherials,
 Pop UP, and Chef's special already redeemed. It does this through its own API, so the seed passes the same checks.
 
 The server listens on all interfaces, so a phone on the same network can reach it.
@@ -69,11 +75,12 @@ contract rejects them.
 
 - **Locally, state is in memory**: the chain and the server's records both reset on restart. On the testnet the
   records are kept in `DATA_FILE`.
-- **Redemptions aren't authenticated.** Anyone who knows an address and a voucher it holds can redeem it, because the
-  app has no key to sign with. A wallet that can sign (CIP-8 `signData`) would prove ownership.
+- **The demo wallet's key is public**, in the app's `.env.example`, and any `EXPO_PUBLIC_WALLET_KEY` ships inside
+  the app. Use testnet keys only. A production app would keep a key in the phone's secure storage instead.
 - **Testnet mode hasn't been run against Blockfrost yet.** The emulator tests cover `Minter` and the API, which are
   the same in both modes.
 - **Minting is one at a time.** Each mint spends one of the issuer's outputs, so the next waits for it to confirm. On
   a real network that's one claim per block; splitting the issuer's ada across several outputs would allow more.
-- **The drops come from the app's [drops.json](../mobile/src/data/drops.json)**, so both sides always agree on ids and
-  coordinates.
+- **The server needs nothing outside this folder.** Its drops are in [src/drops.json](src/drops.json), which the app
+  bundles too, so both always agree on ids and coordinates. The contract's blueprint is [plutus.json](plutus.json),
+  built from [contracts/](../contracts).

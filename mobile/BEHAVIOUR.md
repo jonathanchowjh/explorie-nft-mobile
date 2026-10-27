@@ -135,15 +135,16 @@ success after 0.5 s; a "Tap to Scan your NFT" button re-arms scanning.
   without the poster's code.
 - **Location check:** the server checks the phone's real distance to the drop. The seed data's `success` flag is gone,
   so Cyber kongz is no longer special.
-- **Wallet address:** comes from `EXPO_PUBLIC_WALLET_ADDRESS`. The banner shows it and copies it, or shows "No wallet
-  address" when it's unset.
+- **Wallet:** the app's key comes from `EXPO_PUBLIC_WALLET_KEY` (a testnet key; it ships inside the app). The banner
+  shows and copies the key's address, or shows "No wallet address" without a key. Redeeming a voucher signs the
+  request with the key, so the server knows it's the owner.
 - **Wallet:** loaded from the server at launch, after each claim or redemption, and on every visit to Wallet. It holds
   what the address holds on-chain, so the app no longer has a built-in starting wallet. The server mints the old one
   (Etherials, Pop UP, and Chef's special redeemed) to its demo address. If the wallet can't load, Wallet shows why,
   above empty sections, and Home counts 0 NFTs collected.
 - **Redeeming a voucher:** the server records it. The button shows "Redeeming…" while it waits. If the server refuses,
   Info shows its reason instead of "Voucher Redeemed!".
-- **Drop data:** ids, titles, kinds and coordinates live in `src/data/drops.json`, which the server reads too.
+- **Drop data:** ids, titles, kinds and coordinates live in the server's `src/drops.json`, which the app bundles too.
 - **Distances:** the map card ("590 m away") and details screen show the phone's real distance to the drop, updated
   as it moves, instead of a fixed string per NFT. They're hidden until the position is known, or if location access is
   refused. The map shows the user's position.

@@ -2,7 +2,7 @@ import React from "react";
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import App from "../App";
-import { FakeServer } from "../../test/FakeServer";
+import { DEMO_ADDRESS, FakeServer } from "../../test/FakeServer";
 
 // Jest only lets mock factories use variables whose names start with "mock".
 let mockPermission = { granted: true, canAskAgain: true };
@@ -69,7 +69,7 @@ describe("Scanner", () => {
     expect(server.claims).toEqual([{
       dropId: "5",
       code: "0123456789abcdef",
-      address: "addr_test1demo",
+      address: DEMO_ADDRESS,
       location: madisonSquareGarden,
     }]);
 
@@ -106,11 +106,11 @@ describe("Scanner", () => {
     expect(server.claims).toEqual([]);
   });
 
-  it("doesn't call the server without a wallet address", async () => {
-    delete process.env.EXPO_PUBLIC_WALLET_ADDRESS;
+  it("doesn't call the server without a wallet key", async () => {
+    delete process.env.EXPO_PUBLIC_WALLET_KEY;
     await openScanner();
     await scan("explorie:5:0123456789abcdef");
-    expect(await screen.findByText("This app has no wallet address set up.")).toBeTruthy();
+    expect(await screen.findByText("This app has no wallet key set up.")).toBeTruthy();
     expect(server.claims).toEqual([]);
   });
 

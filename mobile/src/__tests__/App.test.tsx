@@ -56,6 +56,26 @@ describe("App", () => {
     expect(screen.getAllByText("Nothing Here")).toHaveLength(2);
   });
 
+  it("says when a build doesn't know where the server is", async () => {
+    delete process.env.EXPO_PUBLIC_SERVER_URL;
+    await render(<App />);
+    await pressLast("Wallet");
+    expect(await screen.findByText(/doesn't know where the Explorie server is/)).toBeTruthy();
+  });
+
+  it("ignores a slow wallet response that a newer one overtook", async () => {
+    let release!: () => void;
+    server.walletDelay = new Promise((resolve) => (release = resolve));
+    await render(<App />);
+    server.walletDelay = undefined;
+    server.held.push({ unit: "u5", dropId: "5", redeemed: false });
+
+    await pressLast("Wallet");
+    expect(await screen.findByText("Nets vs. Knicks game ticket (front seats)!")).toBeTruthy();
+    await act(async () => release());
+    expect(screen.getByText("Nets vs. Knicks game ticket (front seats)!")).toBeTruthy();
+  });
+
   it("keeps history through header and footer links, so Back works", async () => {
     await render(<App />);
 

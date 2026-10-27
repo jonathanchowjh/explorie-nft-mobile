@@ -7,6 +7,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from "@jest/globals";
 import { fireEvent, render, screen } from "@testing-library/react-native";
 import App from "../src/App";
 import { fetchWallet } from "../src/api";
+import { DEMO_KEY } from "./FakeServer";
 
 // The app against the real claim server (server/src/main.ts) rather than
 // FakeServer, so the two can't drift apart. Only the camera, GPS and map are
@@ -76,7 +77,8 @@ beforeAll(async () => {
   for (const [text, id] of output.matchAll(/explorie:(\d+):\w+/g)) posters.set(id, text);
   globalThis.fetch = nodeFetch as typeof fetch;
   process.env.EXPO_PUBLIC_SERVER_URL = `http://localhost:${PORT}`;
-  process.env.EXPO_PUBLIC_WALLET_ADDRESS = /EXPO_PUBLIC_WALLET_ADDRESS=(\S+)/.exec(output)![1];
+  // The server seeds its demo wallet, so the app signs in with that wallet's key.
+  process.env.EXPO_PUBLIC_WALLET_KEY = DEMO_KEY;
 }, 60_000);
 
 afterAll(() => {

@@ -12,7 +12,7 @@ import {
 import { nftName } from "./claims.ts";
 import type { Drop } from "./drops.ts";
 
-const blueprint = JSON.parse(readFileSync(new URL("../../contracts/plutus.json", import.meta.url), "utf8")) as {
+const blueprint = JSON.parse(readFileSync(new URL("../plutus.json", import.meta.url), "utf8")) as {
   validators: { title: string; compiledCode: string }[];
 };
 const compiledPolicy = blueprint.validators.find((v) => v.title === "explorie_nft.explorie_nft.mint")!.compiledCode;
@@ -50,13 +50,15 @@ export class Minter {
     return utxos.flatMap((u) => Object.keys(u.assets)).filter((unit) => unit.startsWith(this.policyId));
   }
 
-  mint(address: string, drop: Drop): Promise<{ txHash: string; unit: string }> {
-    const minted = this.#queue.then(() => this.#mintNow(address, drop));
+  // `onSubmitted` runs as soon as the transaction is sent, before it confirms.
+  // From then on the NFT may arrive even if waiting for it fails.
+  mint(address: string, drop: Drop, onSubmitted: (unit: string) => void = () => {}): Promise<{ txHash: string; unit: string }> {
+    const minted = this.#queue.then(() => this.#mintNow(address, drop, onSubmitted));
     this.#queue = minted.catch(() => {});
     return minted;
   }
 
-  async #mintNow(address: string, drop: Drop) {
+  async #mintNow(address: string, drop: Drop, onSubmitted: (unit: string) => void) {
     // The policy names the NFT after an output it spends; the name format needs an index below 256.
     const seed = (await this.#lucid.wallet().getUtxos()).find((u) => u.outputIndex <= 255);
     if (!seed) throw new Error("The issuer wallet has no spendable outputs");
@@ -77,6 +79,7 @@ export class Minter {
       })
       .complete();
     const txHash = await (await tx.sign.withWallet().complete()).submit();
+    onSubmitted(unit);
     await this.#lucid.awaitTx(txHash);
     return { txHash, unit };
   }

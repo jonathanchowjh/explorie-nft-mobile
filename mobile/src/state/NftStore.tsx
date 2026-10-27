@@ -16,11 +16,18 @@ export function searchNfts(query: string): Nft[] {
   );
 }
 
-// The server's list of what the address holds, keeping only drops this app can show.
+// The server's list of what the address holds, as one entry per drop this app
+// can show, in the order first minted. An address can hold several of a drop
+// (someone can send one to it); the entry is the first unredeemed one, if any,
+// so Redeem has something to redeem.
 export function toWallet(held: HeldNft[]): WalletNft[] {
-  return held
-    .filter((h) => catalogue.some((n) => n.id === h.dropId))
-    .map((h) => ({ ...findNft(h.dropId), unit: h.unit, redeemed: h.redeemed }));
+  const byDrop = new Map<string, HeldNft>();
+  for (const h of held) {
+    if (!catalogue.some((n) => n.id === h.dropId)) continue;
+    const kept = byDrop.get(h.dropId);
+    if (!kept || (kept.redeemed && !h.redeemed)) byDrop.set(h.dropId, h);
+  }
+  return [...byDrop.values()].map((h) => ({ ...findNft(h.dropId), unit: h.unit, redeemed: h.redeemed }));
 }
 
 type NftStore = {
@@ -41,19 +48,25 @@ export function NftProvider({ children }: { children: React.ReactNode }) {
   const [held, setHeld] = React.useState<HeldNft[]>([]);
   const [walletError, setWalletError] = React.useState<string>();
 
-  const show = React.useCallback((result: Result<HeldNft[]>) => {
-    if (result.ok) setHeld(result.value);
-    setWalletError(result.ok ? undefined : result.message);
+  // Loads can overlap (launch, a visit to Wallet, after a claim), so only the latest one counts.
+  const latest = React.useRef(0);
+  const refresh = React.useCallback(() => {
+    const request = ++latest.current;
+    return fetchWallet().then((result) => {
+      if (request !== latest.current) return;
+      if (result.ok) setHeld(result.value);
+      setWalletError(result.ok ? undefined : result.message);
+    });
   }, []);
-  const refresh = React.useCallback(async () => show(await fetchWallet()), [show]);
 
   React.useEffect(() => {
-    fetchWallet().then(show);
-  }, [show]);
+    refresh();
+  }, [refresh]);
 
-  const store = React.useMemo<NftStore>(
-    () => ({
-      wallet: toWallet(held),
+  const store = React.useMemo<NftStore>(() => {
+    const wallet = toWallet(held);
+    return {
+      wallet,
       walletError,
       refresh,
       collect: async (id, code) => {
@@ -62,15 +75,14 @@ export function NftProvider({ children }: { children: React.ReactNode }) {
         return result;
       },
       redeem: async (id) => {
-        const nft = held.find((h) => h.dropId === id);
+        const nft = wallet.find((n) => n.id === id);
         if (!nft) return { ok: false, message: "That NFT isn't in your wallet." };
         const result = await redeemVoucher(nft.unit);
         if (result.ok) await refresh();
         return result;
       },
-    }),
-    [held, walletError, refresh],
-  );
+    };
+  }, [held, walletError, refresh]);
   return <NftContext.Provider value={store}>{children}</NftContext.Provider>;
 }
 

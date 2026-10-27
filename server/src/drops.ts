@@ -10,7 +10,5 @@ export type Drop = {
 // How close a phone must be to a drop to claim it, unless the server is started with another radius.
 export const CLAIM_RADIUS_METRES = 100;
 
-// The app bundles the same file, adding each drop's images and copy by id.
-export const drops = JSON.parse(
-  readFileSync(new URL("../../mobile/src/data/drops.json", import.meta.url), "utf8"),
-) as Drop[];
+// The app bundles this file too, adding each drop's images and copy by id.
+export const drops = JSON.parse(readFileSync(new URL("drops.json", import.meta.url), "utf8")) as Drop[];

@@ -1,8 +1,9 @@
 import { randomBytes } from "node:crypto";
+import { fileURLToPath } from "node:url";
 import { serve } from "@hono/node-server";
 import { Blockfrost, Emulator, Lucid, generateEmulatorAccountFromPrivateKey } from "@lucid-evolution/lucid";
 import { buildApp } from "./app.ts";
-import { claimCode, posterText } from "./claims.ts";
+import { claimCode, keyAddress, posterText, signRedemption } from "./claims.ts";
 import { CLAIM_RADIUS_METRES, drops } from "./drops.ts";
 import { Minter } from "./Minter.ts";
 import { writePosters } from "./posters.ts";
@@ -21,10 +22,10 @@ const { lucid, issuerAddress } = projectId ? await previewTestnet(projectId) : a
 const radiusMetres = Number(process.env.CLAIM_RADIUS_METRES ?? CLAIM_RADIUS_METRES);
 const dataFile = projectId ? (process.env.DATA_FILE ?? "explorie.db") : ":memory:";
 const port = Number(process.env.PORT ?? 8787);
-// Fixed, so the app's .env.local keeps working across restarts. Nobody holds
-// its key, which is fine: the app only needs an address to receive NFTs.
-const demoAddress =
-  process.env.DEMO_ADDRESS ?? "addr_test1vremee8x8n88fhct3qhjg6xwtmvprylzvnww3dy8f7gn8kcfzddd6";
+// The demo wallet's key. It's published in the app's .env.example, so it's for
+// local and testnet demos only. Fixed, so that file keeps working across restarts.
+const demoKey = process.env.DEMO_KEY ?? "ed25519_sk1a4rftj7hlj80my7equwfedlzu8afjhlpjf5svdvw8ngp6nr25gms0rkak9";
+const demoAddress = keyAddress(demoKey, projectId ? "Preview" : "Custom");
 
 const minter = new Minter(lucid, issuerAddress);
 const app = buildApp(minter, claimSecret, radiusMetres, dataFile);
@@ -50,13 +51,20 @@ if (!projectId) {
       address: demoAddress,
       location: drop.coordinate,
     });
-    if (id === "7") await post("/redemptions", { address: demoAddress, unit });
+    if (id === "7") await post("/redemptions", { address: demoAddress, unit, ...signRedemption(demoKey, unit) });
   }
 }
 
 // Printable posters, made with this server's secret so their codes work here.
-const postersDir = new URL("../posters", import.meta.url).pathname;
-await writePosters(postersDir, claimSecret, drops);
+// A convenience: on a read-only disk (common when deployed) the server runs without them.
+const postersDir = fileURLToPath(new URL("../posters", import.meta.url));
+const postersWritten = await writePosters(postersDir, claimSecret, drops).then(
+  () => true,
+  (error: Error) => {
+    console.warn(`Couldn't write the QR posters (${error.message}); the lines below hold the same text.`);
+    return false;
+  },
+);
 
 // Listens on every interface, so a phone on the same network can reach it.
 serve({ fetch: app.fetch, port, hostname: "0.0.0.0" }, () => {
@@ -65,10 +73,9 @@ serve({ fetch: app.fetch, port, hostname: "0.0.0.0" }, () => {
   console.log(`Policy id: ${minter.policyId}`);
   console.log(`Claim radius: ${radiusMetres} m`);
   if (!projectId) {
-    console.log(`For the app's .env.local, the demo user, who starts with 3 NFTs:`);
-    console.log(`  EXPO_PUBLIC_WALLET_ADDRESS=${demoAddress}`);
+    console.log(`Demo wallet, with 3 NFTs: ${demoAddress} (its key is in the app's .env.example)`);
   }
-  console.log(`QR posters in ${postersDir}, reading:`);
+  console.log(postersWritten ? `QR posters in ${postersDir}, reading:` : "QR poster contents:");
   for (const drop of drops) console.log(`  ${posterText(claimSecret, drop.id)}  ${drop.title}`);
 });
 

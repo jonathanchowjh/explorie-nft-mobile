@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { distanceMetres, isClaimCode } from "./claims.ts";
+import { distanceMetres, isClaimCode, isSignedRedemption } from "./claims.ts";
 import { CLAIM_RADIUS_METRES, drops } from "./drops.ts";
 import type { Minter } from "./Minter.ts";
 import { Records } from "./Records.ts";
@@ -11,7 +11,8 @@ type Claim = {
   location: { latitude: number; longitude: number };
 };
 
-type Redemption = { address: string; unit: string };
+// publicKey and signature are hex: the wallet's key, and its signature of redemptionMessage(unit).
+type Redemption = { address: string; unit: string; publicKey: string; signature: string };
 
 const isString = (v: unknown) => typeof v === "string" && v.length > 0;
 const isNumber = (v: unknown) => typeof v === "number" && Number.isFinite(v);
@@ -25,7 +26,8 @@ function parseClaim(body: unknown): Claim | null {
 
 function parseRedemption(body: unknown): Redemption | null {
   const b = body as Partial<Redemption> | null;
-  return b && isString(b.address) && isString(b.unit) ? (b as Redemption) : null;
+  if (!b || !isString(b.address) || !isString(b.unit)) return null;
+  return isString(b.publicKey) && isString(b.signature) ? (b as Redemption) : null;
 }
 
 // A claim mints a drop's NFT to the user's address. It needs the code from the
@@ -34,6 +36,8 @@ function parseRedemption(body: unknown): Redemption | null {
 // address holds; the server only records which drop each NFT came from and
 // which vouchers were redeemed, in `dataFile`.
 export function buildApp(minter: Minter, claimSecret: string, radiusMetres = CLAIM_RADIUS_METRES, dataFile = ":memory:") {
+  // NaN would pass every distance check.
+  if (!(radiusMetres > 0)) throw new Error(`The claim radius must be a positive number of metres, not ${radiusMetres}`);
   const records = new Records(dataFile);
   const app = new Hono();
 
@@ -56,13 +60,18 @@ export function buildApp(minter: Minter, claimSecret: string, radiusMetres = CLA
 
     // Reserve before minting, so two requests at once can't both mint.
     if (!records.reserveClaim(claim.address, drop.id)) return c.json({ error: "Already claimed" }, 409);
+    let sent = false;
     try {
-      const result = await minter.mint(claim.address, drop);
-      records.recordMint(result.unit, drop.id);
+      const result = await minter.mint(claim.address, drop, (unit) => {
+        sent = true;
+        records.recordMint(claim.address, drop.id, unit);
+      });
       return c.json(result, 201);
     } catch (error) {
-      records.releaseClaim(claim.address, drop.id);
       console.error("Mint failed", error);
+      // A sent mint may still confirm, so the claim stays taken and the NFT shows up when it lands.
+      if (sent) return c.json({ error: "Your NFT is on its way but hasn't confirmed yet. Check your wallet soon." }, 504);
+      records.releaseClaim(claim.address, drop.id);
       return c.json({ error: "Minting failed" }, 502);
     }
   });
@@ -70,26 +79,26 @@ export function buildApp(minter: Minter, claimSecret: string, radiusMetres = CLA
   app.get("/wallet/:address", async (c) => {
     const address = c.req.param("address");
     if (!minter.isAddressOnThisNetwork(address)) return c.json({ error: "Not a Cardano address on this network" }, 400);
-    const held = new Set(await minter.unitsAt(address));
-    return c.json({ nfts: records.minted().filter((nft) => held.has(nft.unit)) });
+    return c.json({ nfts: records.held(await minter.unitsAt(address)) });
   });
 
-  // Anyone who knows an address and a unit it holds can redeem it: the app has
-  // no key to sign with. A wallet that can sign would prove ownership here.
+  // Only the address's own key can redeem its vouchers: the request carries
+  // that key and its signature, which must match the address.
   app.post("/redemptions", async (c) => {
     const redemption = parseRedemption(await c.req.json().catch(() => null));
-    if (!redemption) return c.json({ error: "Expected { address, unit }" }, 400);
-    const drop = drops.find((d) => d.id === records.dropOf(redemption.unit));
+    if (!redemption) return c.json({ error: "Expected { address, unit, publicKey, signature }" }, 400);
+    const { address, unit, publicKey, signature } = redemption;
+    const dropId = records.dropOf(unit);
+    const drop = drops.find((d) => d.id === dropId);
     if (!drop) return c.json({ error: "No such NFT" }, 404);
     if (drop.kind !== "voucher") return c.json({ error: "Only vouchers can be redeemed" }, 400);
-    if (!minter.isAddressOnThisNetwork(redemption.address)) {
-      return c.json({ error: "Not a Cardano address on this network" }, 400);
+    if (!minter.isAddressOnThisNetwork(address)) return c.json({ error: "Not a Cardano address on this network" }, 400);
+    if (!isSignedRedemption(address, unit, publicKey, signature)) {
+      return c.json({ error: "Not signed by this address's key" }, 401);
     }
-    if (!(await minter.unitsAt(redemption.address)).includes(redemption.unit)) {
-      return c.json({ error: "That address doesn't hold this NFT" }, 403);
-    }
-    if (!records.redeem(redemption.unit)) return c.json({ error: "Already redeemed" }, 409);
-    return c.json({ unit: redemption.unit }, 201);
+    if (!(await minter.unitsAt(address)).includes(unit)) return c.json({ error: "That address doesn't hold this NFT" }, 403);
+    if (!records.redeem(unit)) return c.json({ error: "Already redeemed" }, 409);
+    return c.json({ unit }, 201);
   });
 
   return app;
